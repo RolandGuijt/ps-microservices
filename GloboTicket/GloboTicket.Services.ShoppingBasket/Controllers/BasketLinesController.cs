@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GloboTicket.Services.ShoppingBasket.Extensions;
 using GloboTicket.Services.ShoppingBasket.Models;
 using GloboTicket.Services.ShoppingBasket.Repositories;
 using GloboTicket.Services.ShoppingBasket.Services;
@@ -19,13 +20,12 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
 
         public BasketLinesController(IBasketRepository basketRepository, 
             IBasketLinesRepository basketLinesRepository, IEventRepository eventRepository, 
-            IEventCatalogService eventCatalogService, IMapper mapper)
+            IEventCatalogService eventCatalogService)
         {
             _basketRepository = basketRepository;
             _basketLinesRepository = basketLinesRepository;
             _eventRepository = eventRepository;
             _eventCatalogService = eventCatalogService;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -37,7 +37,7 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
             }
 
             var basketLines = await _basketLinesRepository.GetBasketLines(basketId);
-            return Ok(_mapper.Map<IEnumerable<BasketLine>>(basketLines));             
+            return Ok(basketLines.MapToDto());             
         }
 
         [HttpGet("{basketLineId}", Name = "GetBasketLine")]
@@ -55,7 +55,7 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<BasketLine>(basketLine));
+            return Ok(basketLine.MapToDto());
         }
 
         [HttpPost]
@@ -74,12 +74,12 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
                 await _eventRepository.SaveChanges();
             }
 
-            var basketLineEntity = _mapper.Map<Entities.BasketLine>(basketLineForCreation);
+            var basketLineEntity = basketLineForCreation.MapToEntity();
 
             var processedBasketLine = await _basketLinesRepository.AddOrUpdateBasketLine(basketId, basketLineEntity);
             await _basketLinesRepository.SaveChanges();
 
-            var basketLineToReturn = _mapper.Map<BasketLine>(processedBasketLine);
+            var basketLineToReturn = processedBasketLine.MapToDto();
 
             return CreatedAtRoute(
                 "GetBasketLine",
@@ -107,12 +107,12 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
             // map the entity to a dto
             // apply the updated field values to that dto
             // map the dto back to an entity
-            _mapper.Map(basketLineForUpdate, basketLineEntity);
+            basketLineForUpdate.MapToEntity(basketLineEntity);
 
             _basketLinesRepository.UpdateBasketLine(basketLineEntity);
             await _basketLinesRepository.SaveChanges();
 
-            return Ok(_mapper.Map<BasketLine>(basketLineEntity));
+            return Ok(basketLineEntity.MapToDto());
         } 
 
         [HttpDelete("{basketLineId}")]

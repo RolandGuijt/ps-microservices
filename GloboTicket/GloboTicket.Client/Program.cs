@@ -7,16 +7,20 @@ using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c => 
-    c.BaseAddress = new Uri(builder.Configuration["ApiConfigs:EventCatalog:Uri"] ?? throw new InvalidOperationException()));
+builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c =>
+    c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"));
 builder.Services.AddHttpClient<IShoppingBasketService, ShoppingBasketService>(c => 
-    c.BaseAddress = new Uri(builder.Configuration["ApiConfigs:ShoppingBasket:Uri"] ?? throw new InvalidOperationException()));
+    c.BaseAddress = new Uri("https+http://globoticket-services-shoppingbasket"));
 
 builder.Services.AddSingleton<Settings>();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {

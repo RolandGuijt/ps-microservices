@@ -1,18 +1,24 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace GloboTicket.Services.EventCatalog.Migrations
 {
-    public partial class initial : Migration
+    /// <inheritdoc />
+    public partial class Initial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true)
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -23,14 +29,14 @@ namespace GloboTicket.Services.EventCatalog.Migrations
                 name: "Events",
                 columns: table => new
                 {
-                    EventId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Price = table.Column<int>(nullable: false),
-                    Artist = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    ImageUrl = table.Column<string>(nullable: true),
-                    CategoryId = table.Column<Guid>(nullable: false)
+                    EventId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Price = table.Column<int>(type: "integer", nullable: false),
+                    Artist = table.Column<string>(type: "text", nullable: true),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    ImageUrl = table.Column<string>(type: "text", nullable: true),
+                    CategoryId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,6 +55,7 @@ namespace GloboTicket.Services.EventCatalog.Migrations
                 column: "CategoryId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using GloboTicket.Services.ShoppingBasket.Extensions;
 using GloboTicket.Services.ShoppingBasket.Models;
 using GloboTicket.Services.ShoppingBasket.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace GloboTicket.Services.ShoppingBasket.Controllers
 {
@@ -14,12 +13,10 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
     public class BasketsController : ControllerBase
     {
         private readonly IBasketRepository _basketRepository;
-        private readonly IMapper _mapper;
 
-        public BasketsController(IBasketRepository basketRepository, IMapper mapper)
+        public BasketsController(IBasketRepository basketRepository)
         {
             _basketRepository = basketRepository;
-            _mapper = mapper;
         }
 
         [HttpGet("{basketId}", Name = "GetBasket")]
@@ -31,7 +28,7 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
                 return NotFound();
             }
 
-            var result = _mapper.Map<Basket>(basket);
+            var result = basket.MapToDto();
             result.NumberOfItems = basket.BasketLines.Sum(bl => bl.TicketAmount);
             return Ok(result);
         }
@@ -39,12 +36,12 @@ namespace GloboTicket.Services.ShoppingBasket.Controllers
         [HttpPost]
         public async Task<ActionResult<Basket>> Post(BasketForCreation basketForCreation)
         {
-            var basketEntity = _mapper.Map<Entities.Basket>(basketForCreation);
+            var basketEntity = basketForCreation.MapToEntity();
 
             _basketRepository.AddBasket(basketEntity);
             await _basketRepository.SaveChanges();
 
-            var basketToReturn = _mapper.Map<Basket>(basketEntity);
+            var basketToReturn = basketEntity.MapToDto();
 
             return CreatedAtRoute(
                 "GetBasket",

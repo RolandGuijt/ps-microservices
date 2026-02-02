@@ -3,8 +3,9 @@ using System;
 using GloboTicket.Services.ShoppingBasket.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+#nullable disable
 
 namespace GloboTicket.Services.ShoppingBasket.Migrations
 {
@@ -15,18 +16,17 @@ namespace GloboTicket.Services.ShoppingBasket.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("GloboTicket.Services.ShoppingBasket.Entities.Basket", b =>
                 {
                     b.Property<Guid>("BasketId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.HasKey("BasketId");
 
@@ -37,13 +37,13 @@ namespace GloboTicket.Services.ShoppingBasket.Migrations
                 {
                     b.Property<Guid>("BasketLineId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("BasketId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -64,13 +64,13 @@ namespace GloboTicket.Services.ShoppingBasket.Migrations
                 {
                     b.Property<Guid>("EventId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("EventId");
 
@@ -90,6 +90,15 @@ namespace GloboTicket.Services.ShoppingBasket.Migrations
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Basket");
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("GloboTicket.Services.ShoppingBasket.Entities.Basket", b =>
+                {
+                    b.Navigation("BasketLines");
                 });
 #pragma warning restore 612, 618
         }

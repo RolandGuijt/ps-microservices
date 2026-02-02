@@ -1,9 +1,9 @@
 {
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "GloboTicket.Services.TicketCatalog": {
+    "https": {
       "commandName": "Project",
-      "launchUrl": "swagger",
+      "launchUrl": "scalar",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

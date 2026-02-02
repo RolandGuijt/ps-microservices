@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GloboTicket.Services.Shoppi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GloboTicket.Services.EventCatalog", "GloboTicket.Services.EventCatalog\GloboTicket.Services.EventCatalog.csproj", "{E2C27A67-A664-4501-8045-C71F13924979}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.AppHost", "GloboTicket.AppHost\GloboTicket.AppHost.csproj", "{605CDEA7-F7E0-45ED-936E-C29DF70EA005}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.ServiceDefaults", "GloboTicket.ServiceDefaults\GloboTicket.ServiceDefaults.csproj", "{313AC023-47A1-4859-A173-BF58DFA34A02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +35,14 @@ Global
 		{E2C27A67-A664-4501-8045-C71F13924979}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2C27A67-A664-4501-8045-C71F13924979}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2C27A67-A664-4501-8045-C71F13924979}.Release|Any CPU.Build.0 = Release|Any CPU
+		{605CDEA7-F7E0-45ED-936E-C29DF70EA005}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{605CDEA7-F7E0-45ED-936E-C29DF70EA005}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{605CDEA7-F7E0-45ED-936E-C29DF70EA005}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{605CDEA7-F7E0-45ED-936E-C29DF70EA005}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313AC023-47A1-4859-A173-BF58DFA34A02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313AC023-47A1-4859-A173-BF58DFA34A02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313AC023-47A1-4859-A173-BF58DFA34A02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313AC023-47A1-4859-A173-BF58DFA34A02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
