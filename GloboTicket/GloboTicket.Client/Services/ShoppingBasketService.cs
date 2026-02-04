@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
-using GloboTicket.Web.Extensions;
 using GloboTicket.Web.Models;
 using GloboTicket.Web.Models.Api;
 
@@ -24,35 +23,32 @@ namespace GloboTicket.Web.Services
         {
             if (basketId == Guid.Empty)
             {
-                var basketResponse = await client.PostAsJson("/api/baskets", new BasketForCreation { UserId = settings.UserId });
-                var basket = await basketResponse.ReadContentAs<Basket>();
+                var basketResponse = await client.PostAsJsonAsync("/api/baskets", new BasketForCreation { UserId = settings.UserId });
+                var basket = await basketResponse.Content.ReadFromJsonAsync<Basket>();
                 basketId = basket.BasketId;
             }
 
-            var response = await client.PostAsJson($"api/baskets/{basketId}/basketlines", basketLine);
-            return await response.ReadContentAs<BasketLine>();
+            var response = await client.PostAsJsonAsync($"api/baskets/{basketId}/basketlines", basketLine);
+            return await response.Content.ReadFromJsonAsync<BasketLine>();
         }
 
         public async Task<Basket> GetBasket(Guid basketId)
         {
             if (basketId == Guid.Empty)
                 return null;
-            var response = await client.GetAsync($"/api/baskets/{basketId}");
-            return await response.ReadContentAs<Basket>();
+            return await client.GetFromJsonAsync<Basket>($"/api/baskets/{basketId}");
         }
 
         public async Task<IEnumerable<BasketLine>> GetLinesForBasket(Guid basketId)
         {
             if (basketId == Guid.Empty)
                 return new BasketLine[0];
-            var response = await client.GetAsync($"/api/baskets/{basketId}/basketLines");
-            return await response.ReadContentAs<BasketLine[]>();
-
+            return await client.GetFromJsonAsync<BasketLine[]>($"/api/baskets/{basketId}/basketLines");
         }
 
         public async Task UpdateLine(Guid basketId, BasketLineForUpdate basketLineForUpdate)
         {
-            await client.PutAsJson($"/api/baskets/{basketId}/basketLines/{basketLineForUpdate.LineId}", basketLineForUpdate);
+            await client.PutAsJsonAsync($"/api/baskets/{basketId}/basketLines/{basketLineForUpdate.LineId}", basketLineForUpdate);
         }
 
         public async Task RemoveLine(Guid basketId, Guid lineId)
