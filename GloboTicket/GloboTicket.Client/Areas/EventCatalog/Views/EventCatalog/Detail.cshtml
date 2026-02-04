@@ -1,0 +1,54 @@
+﻿@model GloboTicket.Web.Models.Api.Event
+<div class="row mt-5">
+    <div class="col-md-4">
+        <img src="@Model.ImageUrl" class="detailImage" alt="Artist pic" />
+    </div>
+    <div class="col-md-6 ms-1">
+        <div class="columnHeader">@Model.CategoryName.ToUpper()</div>
+        <div class="mt-2 bold">
+            <h1>@Model.Name</h1>
+        </div>
+        <div class="mt-2">
+            <h3>@Model.Artist</h3>
+        </div>
+        <div class="mt-4 bold">
+            <h3>@Model.Date.ToShortDateString()</h3>
+        </div>
+        <div class="mt-4">
+            @Model.Description
+        </div>
+        <div class="mt-5">
+            <h3><span class="bold">$@Model.Price</span> &nbsp; PER TICKET</h3>
+        </div>
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col">
+        <hr />
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col offset-4">
+        <form asp-area="ShoppingBasket" asp-controller="ShoppingBasket" asp-action="AddLine" class="row g-3 align-items-center">
+            <div class="col-auto">
+                <label class="col-form-label">QUANTITY:</label>
+            </div>
+            <div class="col-auto">
+                <select name="TicketAmount" class="form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">PLACE ORDER</button>
+            </div>
+            <input asp-for="EventId" type="hidden" />
+            <input asp-for="Price" type="hidden" />
+        </form>
+    </div>
+</div>
+
+

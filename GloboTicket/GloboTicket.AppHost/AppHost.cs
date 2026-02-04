@@ -3,7 +3,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgresDbServer = builder.AddPostgres("globoticket-sql-postgres")
     .WithLifetime(ContainerLifetime.Persistent);
 var mySqlDbServer = builder.AddMySql("globoticket-sql-mysql")
-    .WithLifetime(ContainerLifetime.Session);
+    .WithLifetime(ContainerLifetime.Persistent);
 
 var eventCatalogDb = postgresDbServer.AddDatabase("globoticket-postgres-eventcatalog");
 var shoppingBasketDb = mySqlDbServer.AddDatabase("globoticket-mysql-shoppingbasket");

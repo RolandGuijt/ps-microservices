@@ -1,0 +1,47 @@
+﻿@model GloboTicket.Web.Models.View.EventListModel
+
+@{
+    var categoryListItems = Model.Categories.Select(c =>
+        new SelectListItem { Value = c.CategoryId.ToString(), Text = c.Name }
+    ).ToList();
+    categoryListItems.Insert(0, new SelectListItem { Text = "All" });
+}
+
+<div class="row mt-5 mb-3">
+    <form asp-action="SelectCategory" method="post" class="row g-3 align-items-center">
+        <div class="col-auto">
+            <select asp-for="SelectedCategory" asp-items="categoryListItems" class="form-select"></select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">FILTER</button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    @if (Model.Events.Count() == 0)
+    {
+        <text>No events were found.</text>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr class="columnHeader">
+                    <th></th>
+                    <th>DATE</th>
+                    <th>NAME</th>
+                    <th>ARTIST</th>
+                    <th>PRICE</th>
+                </tr>
+            </thead>
+            <tbody>
+                @Html.DisplayFor(m => m.Events)
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Widget {
+    <partial name="_ShoppingCartWidget" model="@Model.NumberOfItems" />
+}

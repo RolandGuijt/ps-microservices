@@ -17,7 +17,8 @@ a {
     background-color: #51b5b1;
     padding: 10px 25px 10px 25px;
     font-size: 0.9em;
-    font-family: opensans-bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .filterButton {
@@ -41,14 +42,15 @@ a {
 
 select {
     height: 40px;
-    font-family: opensans-bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
     padding-left: 14px;
     padding-right: 4px;
     margin-right: 20px;
 }
 
 body {
-    font-family: opensans-regular;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -75,7 +77,8 @@ html {
 }
 
 .bold {
-    font-family: opensans-bold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
 }
 
 .tickets {
