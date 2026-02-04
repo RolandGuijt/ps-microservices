@@ -40,12 +40,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-        name: "areas",
-        pattern: "{area:exists}/{controller=EventCatalog}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=EventCatalog}/{action=Index}/{id?}",
-        defaults: new { area = "EventCatalog" });
+        pattern: "{area=EventCatalog}/{controller=EventCatalog}/{action=Index}/{id?}");
 
 app.Run();
