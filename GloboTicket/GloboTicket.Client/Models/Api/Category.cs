@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace GloboTicket.Web.Models.Api
+namespace GloboTicket.Web.Models.Api;
+
+public class Category
 {
-    public class Category
-    {          
-        public Guid CategoryId { get; set; }
-        public string Name { get; set; }
-    }
+    public Guid CategoryId { get; set; }
+    public string Name { get; set; }
 }

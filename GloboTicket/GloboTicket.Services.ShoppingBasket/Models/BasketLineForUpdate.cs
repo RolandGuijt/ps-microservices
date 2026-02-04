@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GloboTicket.Services.ShoppingBasket.Models
+namespace GloboTicket.Services.ShoppingBasket.Models;
+
+public class BasketLineForUpdate
 {
-    public class BasketLineForUpdate
-    {
-        [Required]
-        public int TicketAmount { get; set; }
-    }
+    [Required]
+    public int TicketAmount { get; set; }
 }

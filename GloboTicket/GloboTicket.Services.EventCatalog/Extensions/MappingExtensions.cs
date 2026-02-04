@@ -3,45 +3,44 @@ using System.Linq;
 using GloboTicket.Services.EventCatalog.Entities;
 using GloboTicket.Services.EventCatalog.Models;
 
-namespace GloboTicket.Services.EventCatalog.Extensions
+namespace GloboTicket.Services.EventCatalog.Extensions;
+
+public static class MappingExtensions
 {
-    public static class MappingExtensions
+    public static CategoryDto MapToDto(this Category category)
     {
-        public static CategoryDto MapToDto(this Category category)
+        if (category == null) return null;
+        return new CategoryDto
         {
-            if (category == null) return null;
-            return new CategoryDto
-            {
-                CategoryId = category.CategoryId,
-                Name = category.Name
-            };
-        }
+            CategoryId = category.CategoryId,
+            Name = category.Name
+        };
+    }
 
-        public static List<CategoryDto> MapToDto(this IEnumerable<Category> categories)
-        {
-            return categories?.Select(c => c.MapToDto()).ToList() ?? new List<CategoryDto>();
-        }
+    public static List<CategoryDto> MapToDto(this IEnumerable<Category> categories)
+    {
+        return categories?.Select(c => c.MapToDto()).ToList() ?? new List<CategoryDto>();
+    }
 
-        public static EventDto MapToDto(this Event @event)
+    public static EventDto MapToDto(this Event @event)
+    {
+        if (@event == null) return null;
+        return new EventDto
         {
-            if (@event == null) return null;
-            return new EventDto
-            {
-                EventId = @event.EventId,
-                Name = @event.Name,
-                Price = @event.Price,
-                Artist = @event.Artist,
-                Date = @event.Date,
-                Description = @event.Description,
-                ImageUrl = @event.ImageUrl,
-                CategoryId = @event.CategoryId,
-                CategoryName = @event.Category?.Name
-            };
-        }
+            EventId = @event.EventId,
+            Name = @event.Name,
+            Price = @event.Price,
+            Artist = @event.Artist,
+            Date = @event.Date,
+            Description = @event.Description,
+            ImageUrl = @event.ImageUrl,
+            CategoryId = @event.CategoryId,
+            CategoryName = @event.Category?.Name
+        };
+    }
 
-        public static List<EventDto> MapToDto(this IEnumerable<Event> events)
-        {
-            return events?.Select(e => e.MapToDto()).ToList() ?? new List<EventDto>();
-        }
+    public static List<EventDto> MapToDto(this IEnumerable<Event> events)
+    {
+        return events?.Select(e => e.MapToDto()).ToList() ?? new List<EventDto>();
     }
 }

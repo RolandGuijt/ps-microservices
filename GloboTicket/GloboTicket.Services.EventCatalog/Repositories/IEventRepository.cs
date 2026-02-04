@@ -3,11 +3,10 @@ using GloboTicket.Services.EventCatalog.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GloboTicket.Services.EventCatalog.Repositories
+namespace GloboTicket.Services.EventCatalog.Repositories;
+
+public interface IEventRepository
 {
-    public interface IEventRepository
-    {
-        Task<IEnumerable<Event>> GetEvents(Guid categoryId);
-        Task<Event> GetEventById(Guid eventId);
-    }
+    Task<IEnumerable<Event>> GetEvents(Guid categoryId);
+    Task<Event> GetEventById(Guid eventId);
 }

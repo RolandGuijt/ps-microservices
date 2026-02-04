@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using GloboTicket.Services.ShoppingBasket.Entities;
 
-namespace GloboTicket.Services.ShoppingBasket.Repositories
+namespace GloboTicket.Services.ShoppingBasket.Repositories;
+
+public interface IEventRepository
 {
-    public interface IEventRepository
-    {
-        void AddEvent(Event theEvent);
-        Task<bool> EventExists(Guid eventId);
-        Task<bool> SaveChanges();
-    }
+    void AddEvent(Event theEvent);
+    Task<bool> EventExists(Guid eventId);
+    Task<bool> SaveChanges();
 }

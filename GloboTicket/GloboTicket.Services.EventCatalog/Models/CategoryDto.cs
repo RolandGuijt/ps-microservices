@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace GloboTicket.Services.EventCatalog.Models
+namespace GloboTicket.Services.EventCatalog.Models;
+
+public class CategoryDto
 {
-    public class CategoryDto
-    {
-        public Guid CategoryId { get; set; }
-        public string Name { get; set; }
-    }
+    public Guid CategoryId { get; set; }
+    public string Name { get; set; }
 }

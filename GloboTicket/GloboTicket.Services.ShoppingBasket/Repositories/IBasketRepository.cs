@@ -2,16 +2,15 @@
 using System;
 using System.Threading.Tasks;
 
-namespace GloboTicket.Services.ShoppingBasket.Repositories
+namespace GloboTicket.Services.ShoppingBasket.Repositories;
+
+public interface IBasketRepository
 {
-    public interface IBasketRepository
-    {
-        Task<bool> BasketExists(Guid basketId);
+    Task<bool> BasketExists(Guid basketId);
 
-        Task<Basket> GetBasketById(Guid basketId);
+    Task<Basket> GetBasketById(Guid basketId);
 
-        void AddBasket(Basket basket);
+    void AddBasket(Basket basket);
 
-        Task<bool> SaveChanges();
-    }
+    Task<bool> SaveChanges();
 }

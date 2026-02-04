@@ -1,11 +1,10 @@
 using System;
 
-namespace GloboTicket.Web.Models.View
-{
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
+namespace GloboTicket.Web.Models.View;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-    }
+public class ErrorViewModel
+{
+    public string RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 }

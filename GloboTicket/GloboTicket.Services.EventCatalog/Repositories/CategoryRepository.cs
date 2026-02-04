@@ -5,26 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GloboTicket.Services.EventCatalog.Repositories
+namespace GloboTicket.Services.EventCatalog.Repositories;
+
+public class CategoryRepository(EventCatalogDbContext eventCatalogDbContext): ICategoryRepository
 {
-    public class CategoryRepository: ICategoryRepository
+    public async Task<IEnumerable<Category>> GetAllCategories()
     {
-        private readonly EventCatalogDbContext _eventCatalogDbContext;
+        return await eventCatalogDbContext.Categories.ToListAsync();
+    }
 
-        public CategoryRepository(EventCatalogDbContext eventCatalogDbContext)
-        {
-            _eventCatalogDbContext = eventCatalogDbContext;
-        }
-
-
-        public async Task<IEnumerable<Category>> GetAllCategories()
-        {
-            return await _eventCatalogDbContext.Categories.ToListAsync();
-        }
-
-        public async Task<Category> GetCategoryById(string categoryId)
-        {
-            return await _eventCatalogDbContext.Categories.Where(x => x.CategoryId.ToString() == categoryId).FirstOrDefaultAsync();
-        }
+    public async Task<Category> GetCategoryById(string categoryId)
+    {
+        return await eventCatalogDbContext.Categories.Where(x => x.CategoryId.ToString() == categoryId).FirstOrDefaultAsync();
     }
 }

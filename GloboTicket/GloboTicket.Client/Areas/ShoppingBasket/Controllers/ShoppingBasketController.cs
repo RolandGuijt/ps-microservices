@@ -8,61 +8,52 @@ using GloboTicket.Web.Models.View;
 using GloboTicket.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GloboTicket.Web.Areas.ShoppingBasket.Controllers
+namespace GloboTicket.Web.Areas.ShoppingBasket.Controllers;
+
+[Area("ShoppingBasket")]
+public class ShoppingBasketController(IShoppingBasketService basketService, Settings settings) : Controller
 {
-    [Area("ShoppingBasket")]
-    public class ShoppingBasketController : Controller
+
+    public async Task<IActionResult> Index()
     {
-        private readonly IShoppingBasketService basketService;
-        private readonly Settings settings;
-
-        public ShoppingBasketController(IShoppingBasketService basketService, Settings settings)
+        var basketLines = await basketService.GetLinesForBasket(Request.Cookies.GetCurrentBasketId(settings));
+        var lineViewModels = basketLines.Select(bl => new BasketLineViewModel
         {
-            this.basketService = basketService;
-            this.settings = settings;
+            LineId = bl.BasketLineId,
+            EventId = bl.EventId,
+            EventName = bl.Event.Name,
+            Date = bl.Event.Date,
+            Price = bl.Price,
+            Quantity = bl.TicketAmount
         }
+        );
+        return View(lineViewModels);
+    }
 
-        public async Task<IActionResult> Index()
-        {
-            var basketLines = await basketService.GetLinesForBasket(Request.Cookies.GetCurrentBasketId(settings));
-            var lineViewModels = basketLines.Select(bl => new BasketLineViewModel
-            {
-                LineId = bl.BasketLineId,
-                EventId = bl.EventId,
-                EventName = bl.Event.Name,
-                Date = bl.Event.Date,
-                Price = bl.Price,
-                Quantity = bl.TicketAmount
-            }
-            );
-            return View(lineViewModels);
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddLine(BasketLineForCreation basketLine)
+    {
+        var basketId = Request.Cookies.GetCurrentBasketId(settings);
+        var newLine = await basketService.AddToBasket(basketId, basketLine);
+        Response.Cookies.Append(settings.BasketIdCookieName, newLine.BasketId.ToString());
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddLine(BasketLineForCreation basketLine)
-        {
-            var basketId = Request.Cookies.GetCurrentBasketId(settings);
-            var newLine = await basketService.AddToBasket(basketId, basketLine);
-            Response.Cookies.Append(settings.BasketIdCookieName, newLine.BasketId.ToString());
+        return RedirectToAction("Index");
+    }
 
-            return RedirectToAction("Index");
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateLine(BasketLineForUpdate basketLineUpdate)
+    {
+        var basketId = Request.Cookies.GetCurrentBasketId(settings);
+        await basketService.UpdateLine(basketId, basketLineUpdate);
+        return RedirectToAction("Index");
+    }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateLine(BasketLineForUpdate basketLineUpdate)
-        {
-            var basketId = Request.Cookies.GetCurrentBasketId(settings);
-            await basketService.UpdateLine(basketId, basketLineUpdate);
-            return RedirectToAction("Index");
-        }
-
-        public async Task<IActionResult> RemoveLine(Guid lineId)
-        {
-            var basketId = Request.Cookies.GetCurrentBasketId(settings);
-            await basketService.RemoveLine(basketId, lineId);
-            return RedirectToAction("Index");
-        }
+    public async Task<IActionResult> RemoveLine(Guid lineId)
+    {
+        var basketId = Request.Cookies.GetCurrentBasketId(settings);
+        await basketService.RemoveLine(basketId, lineId);
+        return RedirectToAction("Index");
     }
 }

@@ -6,47 +6,39 @@ using GloboTicket.Services.ShoppingBasket.Models;
 using GloboTicket.Services.ShoppingBasket.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GloboTicket.Services.ShoppingBasket.Controllers
+namespace GloboTicket.Services.ShoppingBasket.Controllers;
+
+[Route("api/baskets")]
+[ApiController]
+public class BasketsController(IBasketRepository basketRepository) : ControllerBase
 {
-    [Route("api/baskets")]
-    [ApiController]
-    public class BasketsController : ControllerBase
+    [HttpGet("{basketId}", Name = "GetBasket")]
+    public async Task<ActionResult<Basket>> Get(Guid basketId)
     {
-        private readonly IBasketRepository _basketRepository;
-
-        public BasketsController(IBasketRepository basketRepository)
+        var basket = await basketRepository.GetBasketById(basketId);
+        if (basket == null)
         {
-            _basketRepository = basketRepository;
+            return NotFound();
         }
 
-        [HttpGet("{basketId}", Name = "GetBasket")]
-        public async Task<ActionResult<Basket>> Get(Guid basketId)
-        {
-            var basket = await _basketRepository.GetBasketById(basketId);
-            if (basket == null)
-            {
-                return NotFound();
-            }
+        var result = basket.MapToDto();
+        result.NumberOfItems = basket.BasketLines.Sum(bl => bl.TicketAmount);
+        return Ok(result);
+    }
 
-            var result = basket.MapToDto();
-            result.NumberOfItems = basket.BasketLines.Sum(bl => bl.TicketAmount);
-            return Ok(result);
-        }
+    [HttpPost]
+    public async Task<ActionResult<Basket>> Post(BasketForCreation basketForCreation)
+    {
+        var basketEntity = basketForCreation.MapToEntity();
 
-        [HttpPost]
-        public async Task<ActionResult<Basket>> Post(BasketForCreation basketForCreation)
-        {
-            var basketEntity = basketForCreation.MapToEntity();
+        basketRepository.AddBasket(basketEntity);
+        await basketRepository.SaveChanges();
 
-            _basketRepository.AddBasket(basketEntity);
-            await _basketRepository.SaveChanges();
+        var basketToReturn = basketEntity.MapToDto();
 
-            var basketToReturn = basketEntity.MapToDto();
-
-            return CreatedAtRoute(
-                "GetBasket",
-                new { basketId = basketEntity.BasketId },
-                basketToReturn);
-        }
+        return CreatedAtRoute(
+            "GetBasket",
+            new { basketId = basketEntity.BasketId },
+            basketToReturn);
     }
 }

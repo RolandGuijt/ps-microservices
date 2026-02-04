@@ -6,56 +6,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GloboTicket.Services.ShoppingBasket.Repositories
+namespace GloboTicket.Services.ShoppingBasket.Repositories;
+
+public class BasketLinesRepository(ShoppingBasketDbContext shoppingBasketDbContext) : IBasketLinesRepository
 {
-    public class BasketLinesRepository : IBasketLinesRepository
+    public async Task<IEnumerable<BasketLine>> GetBasketLines(Guid basketId)
     {
-        private readonly ShoppingBasketDbContext _shoppingBasketDbContext;
+        return await shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
+            .Where(b => b.BasketId == basketId).ToListAsync();
+    }
 
-        public BasketLinesRepository(ShoppingBasketDbContext shoppingBasketDbContext)
-        {
-            _shoppingBasketDbContext = shoppingBasketDbContext;
-        }
+    public async Task<BasketLine> GetBasketLineById(Guid basketLineId)
+    {
+        return await shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
+            .Where(b => b.BasketLineId == basketLineId).FirstOrDefaultAsync();
+    }
 
-        public async Task<IEnumerable<BasketLine>> GetBasketLines(Guid basketId)
+    public async Task<BasketLine> AddOrUpdateBasketLine(Guid basketId, BasketLine basketLine)
+    {
+        var existingLine = await shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
+            .Where(b => b.BasketId == basketId && b.EventId == basketLine.EventId).FirstOrDefaultAsync();
+        if (existingLine == null)
         {
-            return await _shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
-                .Where(b => b.BasketId == basketId).ToListAsync();
+            basketLine.BasketId = basketId;
+            shoppingBasketDbContext.BasketLines.Add(basketLine);
+            return basketLine;
         }
+        existingLine.TicketAmount += basketLine.TicketAmount;
+        return existingLine;
+    }
 
-        public async Task<BasketLine> GetBasketLineById(Guid basketLineId)
-        {
-            return await _shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
-                .Where(b => b.BasketLineId == basketLineId).FirstOrDefaultAsync();
-        }
+    public void UpdateBasketLine(BasketLine basketLine)
+    {
+        // empty on purpose
+    }
 
-        public async Task<BasketLine> AddOrUpdateBasketLine(Guid basketId, BasketLine basketLine)
-        {
-            var existingLine = await _shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
-                .Where(b => b.BasketId == basketId && b.EventId == basketLine.EventId).FirstOrDefaultAsync();
-            if (existingLine == null)
-            {
-                basketLine.BasketId = basketId;
-                _shoppingBasketDbContext.BasketLines.Add(basketLine);
-                return basketLine;
-            }
-            existingLine.TicketAmount += basketLine.TicketAmount;
-            return existingLine;
-        }
+    public void RemoveBasketLine(BasketLine basketLine)
+    {
+        shoppingBasketDbContext.BasketLines.Remove(basketLine);
+    }
 
-        public void UpdateBasketLine(BasketLine basketLine)
-        {
-            // empty on purpose
-        }
-        
-        public void RemoveBasketLine(BasketLine basketLine)
-        {
-            _shoppingBasketDbContext.BasketLines.Remove(basketLine);
-        }
-
-        public async Task<bool> SaveChanges()
-        {
-            return (await _shoppingBasketDbContext.SaveChangesAsync() > 0);
-        }
+    public async Task<bool> SaveChanges()
+    {
+        return (await shoppingBasketDbContext.SaveChangesAsync() > 0);
     }
 }
