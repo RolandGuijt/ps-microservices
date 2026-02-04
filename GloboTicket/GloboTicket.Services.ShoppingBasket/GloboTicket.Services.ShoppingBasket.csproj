@@ -6,12 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.70.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2" />
-            
+
     <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1" />
-            
+
     <PackageReference Include="Scalar.AspNetCore" Version="2.12.30" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\shoppingbasket.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>

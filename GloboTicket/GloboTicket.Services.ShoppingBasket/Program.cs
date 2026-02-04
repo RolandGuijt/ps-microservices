@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 // Add services to the container.
+builder.Services.AddGrpc();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
@@ -52,5 +53,7 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGrpcService<GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketGrpcService>();
 
 app.Run();

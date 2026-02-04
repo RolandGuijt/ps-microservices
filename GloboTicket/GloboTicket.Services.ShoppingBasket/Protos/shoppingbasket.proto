@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+option csharp_namespace = "GloboTicket.Services.ShoppingBasket.Grpc";
+
+package shoppingbasket;
+
+service ShoppingBasketService {
+  rpc GetBasket (GetBasketRequest) returns (BasketReply);
+  rpc CreateBasket (CreateBasketRequest) returns (BasketReply);
+  rpc GetBasketLines (GetBasketLinesRequest) returns (BasketLinesReply);
+  rpc AddOrUpdateBasketLine (AddOrUpdateBasketLineRequest) returns (BasketLineReply);
+  rpc RemoveBasketLine (RemoveBasketLineRequest) returns (RemoveBasketLineReply);
+}
+
+message GetBasketRequest {
+  string basket_id = 1;
+}
+
+message CreateBasketRequest {
+  string user_id = 1;
+}
+
+message BasketReply {
+  string basket_id = 1;
+  string user_id = 2;
+  int32 number_of_items = 3;
+}
+
+message GetBasketLinesRequest {
+  string basket_id = 1;
+}
+
+message BasketLinesReply {
+  repeated BasketLineReply basket_lines = 1;
+}
+
+message BasketLineReply {
+  string basket_line_id = 1;
+  string basket_id = 2;
+  string event_id = 3;
+  int32 price = 4;
+  int32 ticket_amount = 5;
+}
+
+message AddOrUpdateBasketLineRequest {
+  string basket_id = 1;
+  string basket_line_id = 2;
+  string event_id = 3;
+  int32 price = 4;
+  int32 ticket_amount = 5;
+}
+
+message RemoveBasketLineRequest {
+  string basket_line_id = 1;
+}
+
+message RemoveBasketLineReply {
+  bool success = 1;
+}
