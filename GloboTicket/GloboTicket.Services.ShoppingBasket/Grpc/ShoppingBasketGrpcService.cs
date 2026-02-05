@@ -3,13 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using GloboTicket.Services.ShoppingBasket.Entities;
 using GloboTicket.Services.ShoppingBasket.Repositories;
+using GloboTicket.Services.ShoppingBasket.Services;
 using Grpc.Core;
 
 namespace GloboTicket.Services.ShoppingBasket.Grpc;
 
 public class ShoppingBasketGrpcService(
     IBasketRepository basketRepository,
-    IBasketLinesRepository basketLinesRepository) : ShoppingBasketService.ShoppingBasketServiceBase
+    IBasketLinesRepository basketLinesRepository,
+    IEventRepository eventRepository,
+    IEventCatalogService eventCatalogService) : ShoppingBasketService.ShoppingBasketServiceBase
 {
     public override async Task<BasketReply> GetBasket(GetBasketRequest request, ServerCallContext context)
     {
@@ -33,7 +36,7 @@ public class ShoppingBasketGrpcService(
             NumberOfItems = numberOfItems
         };
     }
-
+    
     public override async Task<BasketReply> CreateBasket(CreateBasketRequest request, ServerCallContext context)
     {
         if (!Guid.TryParse(request.UserId, out var userId))
@@ -94,6 +97,13 @@ public class ShoppingBasketGrpcService(
         {
             throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid event ID format"));
         }
+        
+        if (!await eventRepository.EventExists(eventId))
+        {
+            var eventFromCatalog = await eventCatalogService.GetEvent(eventId);
+            eventRepository.AddEvent(eventFromCatalog);
+            await eventRepository.SaveChanges();
+        }
 
         Guid? basketLineId = null;
         if (!string.IsNullOrEmpty(request.BasketLineId) && Guid.TryParse(request.BasketLineId, out var parsedBasketLineId))
@@ -111,6 +121,7 @@ public class ShoppingBasketGrpcService(
         };
 
         var result = await basketLinesRepository.AddOrUpdateBasketLine(basketId, basketLine);
+        await basketLinesRepository.SaveChanges();
 
         return new BasketLineReply
         {

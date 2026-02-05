@@ -13,7 +13,8 @@ var eventCatalogService = builder.AddProject<Projects.GloboTicket_Services_Event
     .WithReference(eventCatalogDb)
     .WaitFor(eventCatalogDb);
 
-var shoppingBasketService = builder.AddProject<Projects.GloboTicket_Services_ShoppingBasket>("globoticket-services-shoppingbasket")
+var shoppingBasketService = builder
+    .AddProject<Projects.GloboTicket_Services_ShoppingBasket>("globoticket-services-shoppingbasket")
     .WithReference(eventCatalogService)
     .WaitFor(eventCatalogService)
     .WithReference(shoppingBasketDb)

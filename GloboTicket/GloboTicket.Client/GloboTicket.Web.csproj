@@ -9,7 +9,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="10.0.2" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="..\GloboTicket.Services.ShoppingBasket\Protos\shoppingbasket.proto" GrpcServices="Client" Link="Protos\shoppingbasket.proto" />
   </ItemGroup>
 
   <ItemGroup>

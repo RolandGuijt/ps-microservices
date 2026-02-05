@@ -48,12 +48,11 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection();
+app.MapGrpcService<GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketGrpcService>();
+
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthorization();
 app.MapControllers();
-
-app.MapGrpcService<GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketGrpcService>();
 
 app.Run();
