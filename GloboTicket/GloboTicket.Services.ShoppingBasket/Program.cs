@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +14,6 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddGrpc();
-builder.Services.AddControllers();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<IBasketLinesRepository, BasketLinesRepository>();
@@ -28,9 +26,6 @@ builder.Services.AddDbContext<ShoppingBasketDbContext>(options =>
 {
     options.UseMySQL(builder.Configuration.GetConnectionString("globoticket-mysql-shoppingbasket") ?? throw new InvalidOperationException());
 });
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -49,10 +44,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGrpcService<GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketGrpcService>();
-
-app.MapOpenApi();
-app.MapScalarApiReference();
-app.UseAuthorization();
-app.MapControllers();
 
 app.Run();

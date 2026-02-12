@@ -133,7 +133,18 @@ public class ShoppingBasketGrpcService(
         };
     }
 
-    public override async Task<RemoveBasketLineReply> RemoveBasketLine(RemoveBasketLineRequest request, ServerCallContext context)
+    public override async Task<SuccessReply> UpdateBasketLine(UpdateBasketLineRequest request, ServerCallContext context)
+    {
+        await basketLinesRepository.UpdateBasketLine(Guid.Parse(request.BasketId), Guid.Parse(request.LineId), request.TicketAmount);
+        var success = await basketLinesRepository.SaveChanges();
+
+        return new SuccessReply
+        {
+            Success = success
+        };
+    }
+
+    public override async Task<SuccessReply> RemoveBasketLine(RemoveBasketLineRequest request, ServerCallContext context)
     {
         if (!Guid.TryParse(request.BasketLineId, out var basketLineId))
         {
@@ -149,7 +160,7 @@ public class ShoppingBasketGrpcService(
         basketLinesRepository.RemoveBasketLine(basketLine);
         var success = await basketLinesRepository.SaveChanges();
 
-        return new RemoveBasketLineReply
+        return new SuccessReply
         {
             Success = success
         };

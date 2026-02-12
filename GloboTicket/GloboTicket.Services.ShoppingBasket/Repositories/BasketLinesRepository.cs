@@ -36,9 +36,11 @@ public class BasketLinesRepository(ShoppingBasketDbContext shoppingBasketDbConte
         return existingLine;
     }
 
-    public void UpdateBasketLine(BasketLine basketLine)
+    public async Task UpdateBasketLine(Guid basketId, Guid lineId, int ticketAmount)
     {
-        // empty on purpose
+        var existingLine = await shoppingBasketDbContext.BasketLines.Include(bl => bl.Event)
+           .Where(b => b.BasketId == basketId && b.BasketLineId == lineId).FirstAsync();
+        existingLine.TicketAmount = ticketAmount;
     }
 
     public void RemoveBasketLine(BasketLine basketLine)

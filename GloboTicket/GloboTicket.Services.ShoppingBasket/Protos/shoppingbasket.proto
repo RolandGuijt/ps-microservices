@@ -9,7 +9,8 @@ service ShoppingBasketService {
   rpc CreateBasket (CreateBasketRequest) returns (BasketReply);
   rpc GetBasketLines (GetBasketLinesRequest) returns (BasketLinesReply);
   rpc AddOrUpdateBasketLine (AddOrUpdateBasketLineRequest) returns (BasketLineReply);
-  rpc RemoveBasketLine (RemoveBasketLineRequest) returns (RemoveBasketLineReply);
+  rpc UpdateBasketLine (UpdateBasketLineRequest) returns (SuccessReply);
+  rpc RemoveBasketLine (RemoveBasketLineRequest) returns (SuccessReply);
 }
 
 message GetBasketRequest {
@@ -50,10 +51,16 @@ message AddOrUpdateBasketLineRequest {
   int32 ticket_amount = 5;
 }
 
+message UpdateBasketLineRequest {
+  string basket_id = 1;
+  string line_id = 2;
+  int32 ticket_amount = 3;
+}
+
 message RemoveBasketLineRequest {
   string basket_line_id = 1;
 }
 
-message RemoveBasketLineReply {
+message SuccessReply {
   bool success = 1;
 }

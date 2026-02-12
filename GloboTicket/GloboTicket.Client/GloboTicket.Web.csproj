@@ -14,11 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="..\GloboTicket.Services.ShoppingBasket\Protos\shoppingbasket.proto" GrpcServices="Client" Link="Protos\shoppingbasket.proto" />
+    <ProjectReference Include="..\GloboTicket.ServiceDefaults\GloboTicket.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GloboTicket.ServiceDefaults\GloboTicket.ServiceDefaults.csproj" />
+    <Protobuf Include="..\GloboTicket.Services.ShoppingBasket\Protos\shoppingbasket.proto">
+      <Link>Areas\ShoppingBasket\Protos\shoppingbasket.proto</Link>
+      <Generator>MSBuild:Compile</Generator>
+    </Protobuf>
   </ItemGroup>
 
 </Project>

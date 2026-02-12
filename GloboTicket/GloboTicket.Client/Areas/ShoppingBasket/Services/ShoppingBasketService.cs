@@ -116,28 +116,12 @@ public class ShoppingBasketService(
 
     public async Task UpdateLine(Guid basketId, BasketLineForUpdate basketLineForUpdate)
     {
-        // First get the current basket line to get the eventId and price
-        var getLinesRequest = new GetBasketLinesRequest
-        {
-            BasketId = basketId.ToString()
-        };
-
-        var lines = await grpcClient.GetBasketLinesAsync(getLinesRequest);
-        var existingLine = lines.BasketLines.FirstOrDefault(l => l.BasketLineId == basketLineForUpdate.LineId.ToString());
-
-        if (existingLine == null)
-            throw new InvalidOperationException("Basket line not found");
-
-        var updateRequest = new AddOrUpdateBasketLineRequest
+        await grpcClient.UpdateBasketLineAsync(new UpdateBasketLineRequest
         {
             BasketId = basketId.ToString(),
-            BasketLineId = basketLineForUpdate.LineId.ToString(),
-            EventId = existingLine.EventId,
-            Price = existingLine.Price,
+            LineId = basketLineForUpdate.LineId.ToString(),
             TicketAmount = basketLineForUpdate.TicketAmount
-        };
-
-        await grpcClient.AddOrUpdateBasketLineAsync(updateRequest);
+        });
     }
 
     public async Task RemoveLine(Guid basketId, Guid lineId)

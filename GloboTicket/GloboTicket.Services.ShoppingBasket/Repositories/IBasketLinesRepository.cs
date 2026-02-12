@@ -13,7 +13,7 @@ public interface IBasketLinesRepository
 
     Task<BasketLine> AddOrUpdateBasketLine(Guid basketId, BasketLine basketLine);
 
-    void UpdateBasketLine(BasketLine basketLine);
+    Task UpdateBasketLine(Guid basketId, Guid lineId, int ticketAmount);
 
     void RemoveBasketLine(BasketLine basketLine);
 
