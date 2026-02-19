@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"/>
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NServiceBus.Extensions.Hosting" Version="4.*" />
+        <PackageReference Include="NServiceBus.RabbitMQ" Version="11.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\GloboTicket.Integration.Messages\GloboTicket.Integration.Messages.csproj" />
+      <ProjectReference Include="..\GloboTicket.ServiceDefaults\GloboTicket.ServiceDefaults.csproj" />
+    </ItemGroup>
+
+</Project>
