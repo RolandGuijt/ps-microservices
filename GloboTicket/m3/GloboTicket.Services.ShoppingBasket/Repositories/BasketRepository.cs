@@ -29,7 +29,11 @@ public class BasketRepository(ShoppingBasketDbContext shoppingBasketDbContext) :
 
     public async Task RemoveBasket(Guid basketId)
     {
-        shoppingBasketDbContext.Baskets.Remove(await GetBasketById(basketId));
+        var basket = await GetBasketById(basketId);
+        if (basket is null)
+            return;
+        
+        shoppingBasketDbContext.Baskets.Remove(basket);
         await shoppingBasketDbContext.SaveChangesAsync();
     }
 

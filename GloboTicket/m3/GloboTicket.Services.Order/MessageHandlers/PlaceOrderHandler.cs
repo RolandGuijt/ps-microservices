@@ -18,6 +18,6 @@ public class PlaceOrderHandler(IOrderRepository orderRepository): IHandleMessage
             OrderPlaced = DateTime.Now
         });
 
-        await context.Publish(new OrderPlaced(orderId, message.UserId,  message.BasketId, message.BasketTotal));
+        await context.Publish(new OrderPlaced(orderId, message.BasketId, message.UserId, message.BasketTotal));
     }
 }

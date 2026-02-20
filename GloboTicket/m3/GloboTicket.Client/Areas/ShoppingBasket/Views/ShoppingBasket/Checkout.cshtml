@@ -3,7 +3,7 @@
 <h2 class="text-danger">@ViewBag.ErrorMessage</h2>
 
 <form asp-action="Checkout" method="post" class="form-horizontal" role="form">
-    <h3>Your total is @Model.BasketTotal</h3>
+    <h3>Your total is $@Model.BasketTotal</h3>
     <h4>You're just one step away from placing your order.</h4>
 
     <div asp-validation-summary="All" class="text-danger"></div>
