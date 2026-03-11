@@ -64,7 +64,7 @@ internal static class HostingExtensions
             })
             .AddTestUsers(TestUsers.Users)
             .AddLicenseSummary();
-
+        
         // in-memory, code config
         isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
         isBuilder.AddInMemoryClients(Config.Clients);

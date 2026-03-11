@@ -1,3 +1,4 @@
+using Duende.IdentityModel;
 using Duende.IdentityServer.Models;
 
 namespace GloboTicket.Services.IdentityServer;
@@ -31,6 +32,14 @@ public static class Config
                 AllowedScopes = { "openid", "profile", "event-catalog", "shopping-basket", "order" },
 
                 AllowOfflineAccess = true,
+            },
+            new()
+            {
+                ClientId = "ShoppingBasket",
+                ClientSecrets = { new("wexite43".Sha256()) },
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                
+                AllowedScopes = { "event-catalog" },
             }
         ];
 }

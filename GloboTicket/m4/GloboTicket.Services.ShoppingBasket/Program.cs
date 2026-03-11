@@ -1,4 +1,5 @@
 using System;
+using Duende.AccessTokenManagement;
 using GloboTicket.Integration.Messages;
 using GloboTicket.Services.ShoppingBasket;
 using GloboTicket.Services.ShoppingBasket.DbContexts;
@@ -35,6 +36,17 @@ builder.Services.AddAuthorization()
         p.RequireClaim("scope", "shopping-basket");
     });
 
+builder.Services.AddClientCredentialsTokenManagement()
+    .AddClient(ClientCredentialsClientName.Parse("event-catalog-client"), client =>
+    {
+        client.TokenEndpoint = new Uri(builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"] + "/connect/token");
+
+        client.ClientId = ClientId.Parse("ShoppingBasket");
+        client.ClientSecret = ClientSecret.Parse("wexite43");
+
+        client.Scope = Scope.Parse("event-catalog");
+    });
+
 var endpointConfiguration = new EndpointConfiguration("ShoppingCart");
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 endpointConfiguration.EnableInstallers();
@@ -58,8 +70,9 @@ builder.Services.AddTransient<TokenForwardingHandler>();
 
 
 builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c =>
-    c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"))
-    .AddHttpMessageHandler<TokenForwardingHandler>();
+        c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"))
+    //.AddHttpMessageHandler<TokenForwardingHandler>()
+    .AddClientCredentialsTokenHandler(ClientCredentialsClientName.Parse("event-catalog-client"));
 
 builder.Services.AddDbContext<ShoppingBasketDbContext>(options =>
 {

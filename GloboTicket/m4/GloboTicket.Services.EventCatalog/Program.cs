@@ -26,9 +26,11 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddAuthorization()
     .AddAuthorizationBuilder()
-    .AddPolicy("event-catalog-scope", p =>
+    .AddPolicy("event-catalog-policy", p =>
     {
         p.RequireAuthenticatedUser();
+        p.RequireAssertion(context => context.User.HasClaim(c => c.Type == "sub" || 
+            c is { Type: "client_id", Value: "ShoppingBasket" }));
         p.RequireClaim("scope", "event-catalog");
     });
 
@@ -76,6 +78,6 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthorization();
 app.MapControllers()
-    .RequireAuthorization("event-catalog-scope");
+    .RequireAuthorization("event-catalog-policy");
 
 app.Run();

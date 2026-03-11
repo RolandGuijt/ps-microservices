@@ -44,7 +44,8 @@ var orderService = builder
     .WaitFor(orderDb)
     .WithReference(transport)
     .WaitFor(transport)
-    .WithReference(shoppingBasketService);
+    .WithReference(shoppingBasketService)
+    .WithReference(identityService);
 
 var paymentService = builder
     .AddProject<Projects.GloboTicket_Services_Payment>("globoticket-services-payment")
