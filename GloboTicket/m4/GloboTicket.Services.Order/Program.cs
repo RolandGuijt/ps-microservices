@@ -13,14 +13,20 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication()
     .AddJwtBearer(opt =>
     {
-        opt.Authority = "https://localhost:5000";
+        opt.Authority =builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
 
         opt.TokenValidationParameters.ValidateAudience = false;
         opt.TokenValidationParameters.ValidTypes = ["at+jwt"];
 
         opt.MapInboundClaims = false;
+    });
 
-        opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(1);
+builder.Services.AddAuthorization()
+    .AddAuthorizationBuilder()
+    .AddPolicy("order-scope", p =>
+    {
+        p.RequireAuthenticatedUser();
+        p.RequireClaim("scope", "order");
     });
 
 var endpointConfiguration = new EndpointConfiguration("Order");
@@ -50,11 +56,13 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 }
 
+app.UseAuthorization();
+
 app.MapGet("/orders/{userId}", async (Guid userId, IOrderRepository orderRepository) =>
 {
     var orders = await orderRepository.GetOrdersForUser(userId);
     return orders.MapToDto();
-}).RequireAuthorization();
+}).RequireAuthorization("order-scope");
 
 app.MapOpenApi();
 app.UseHttpsRedirection();

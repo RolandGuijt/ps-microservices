@@ -1,14 +1,13 @@
 using System;
+using Duende.AccessTokenManagement.OpenIdConnect;
 using GloboTicket.Web.Models;
 using GloboTicket.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NServiceBus;
 using GrpcShoppingBasketService = GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +16,6 @@ builder.AddServiceDefaults();
 
 builder.Services.AddControllersWithViews();
 
-#region addauthn
 builder.Services.AddAuthentication(opt =>
     {
         opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -26,7 +24,7 @@ builder.Services.AddAuthentication(opt =>
     .AddCookie()
     .AddOpenIdConnect(opt =>
     {
-        opt.Authority = "https://localhost:5100";
+        opt.Authority = builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
 
         opt.ClientId = "Web";
         opt.ClientSecret = "3248dsflkjw";
@@ -46,15 +44,15 @@ builder.Services.AddAuthentication(opt =>
         opt.ClaimActions.MapAll();
 
         opt.MapInboundClaims = false;
-
         opt.DisableTelemetry = true;
         opt.SaveTokens = true;
     });
-#endregion addauthn
 
-builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c =>
+builder.Services.AddOpenIdConnectAccessTokenManagement();
+
+builder.Services.AddUserAccessTokenHttpClient("event-catalog-client", configureClient:c =>
     c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"));
-builder.Services.AddHttpClient<IOrderService, OrderService>(c =>
+builder.Services.AddUserAccessTokenHttpClient("order-client", configureClient:c =>
     c.BaseAddress = new Uri("https+http://globoticket-services-order"));
 
 
@@ -62,8 +60,10 @@ var shoppingBasketUrl = builder.Configuration["GLOBOTICKET_SERVICES_SHOPPINGBASK
 builder.Services.AddGrpcClient<GrpcShoppingBasketService.ShoppingBasketServiceClient>(o =>
 {
     o.Address = new Uri(shoppingBasketUrl);
-});
+}).AddUserAccessTokenHandler();
 
+builder.Services.AddScoped<IEventCatalogService, EventCatalogService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IShoppingBasketService, ShoppingBasketService>();
 
 builder.Services.AddSingleton<Settings>();
@@ -91,6 +91,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{area=EventCatalog}/{controller=EventCatalog}/{action=Index}/{id?}");
+        pattern: "{area=EventCatalog}/{controller=EventCatalog}/{action=Index}/{id?}")
+    .RequireAuthorization();
 
 app.Run();

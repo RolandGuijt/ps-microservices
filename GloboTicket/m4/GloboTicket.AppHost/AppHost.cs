@@ -20,9 +20,13 @@ var eventCatalogDb = postgresDbServer.AddDatabase("globoticket-postgres-eventcat
 var shoppingBasketDb = mySqlDbServer.AddDatabase("globoticket-mysql-shoppingbasket");
 var orderDb = mySqlDbServer.AddDatabase("globoticket-mysql-order");
 
-var eventCatalogService = builder.AddProject<Projects.GloboTicket_Services_EventCatalog>("globoticket-services-eventcatalog")
+var identityService = builder.AddProject<Projects.GloboTicket_Services_IdentityServer>("globoticket-services-identity");
+
+var eventCatalogService = builder
+    .AddProject<Projects.GloboTicket_Services_EventCatalog>("globoticket-services-eventcatalog")
     .WithReference(eventCatalogDb)
-    .WaitFor(eventCatalogDb);
+    .WaitFor(eventCatalogDb)
+    .WithReference(identityService);
 
 var shoppingBasketService = builder
     .AddProject<Projects.GloboTicket_Services_ShoppingBasket>("globoticket-services-shoppingbasket")
@@ -31,14 +35,16 @@ var shoppingBasketService = builder
     .WithReference(eventCatalogService)
     .WaitFor(eventCatalogService)
     .WithReference(transport)
-    .WaitFor(transport);
+    .WaitFor(transport)
+    .WithReference(identityService);
 
 var orderService = builder
     .AddProject<Projects.GloboTicket_Services_Order>("globoticket-services-order")
     .WithReference(orderDb)
     .WaitFor(orderDb)
     .WithReference(transport)
-    .WaitFor(transport);
+    .WaitFor(transport)
+    .WithReference(shoppingBasketService);
 
 var paymentService = builder
     .AddProject<Projects.GloboTicket_Services_Payment>("globoticket-services-payment")
@@ -50,11 +56,8 @@ builder.AddProject<Projects.GloboTicket_Web>("globoticket-web")
     .WaitFor(eventCatalogService)
     .WithReference(shoppingBasketService)
     .WaitFor(shoppingBasketService)
-    .WithReference(orderService);
-
-builder.AddProject<Projects.GloboTicket_Services_IdentityServer>("globoticket-services-identity")
-    .WithReference(eventCatalogService)
-    .WithReference(shoppingBasketService)
-    .WithReference(orderService);
+    .WithReference(orderService)
+    .WithReference(identityService)
+    .WaitFor(identityService);
 
 builder.Build().Run();

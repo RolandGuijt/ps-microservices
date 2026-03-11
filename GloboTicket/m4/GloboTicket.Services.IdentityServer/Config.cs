@@ -24,15 +24,10 @@ public static class Config
             new()
             {
                 ClientId = "Web",
-
                 ClientSecrets = { new("3248dsflkjw".Sha256()) },
-
                 AllowedGrantTypes = GrantTypes.Code,
 
-                RedirectUris = { "https://web.dev.localhost:5001/signin-oidc" },
-                PostLogoutRedirectUris = { "https://web.dev.localhost:5001/signout-callback-oidc"},
-                FrontChannelLogoutUri = "https://web.dev.localhost:5001/signout-oidc",
-
+                RedirectUris = { "https://localhost:5000/signin-oidc" },
                 AllowedScopes = { "openid", "profile", "event-catalog", "shopping-basket", "order" },
 
                 AllowOfflineAccess = true,

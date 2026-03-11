@@ -22,11 +22,11 @@ endpointConfiguration.EnableInstallers();
 var connectionString = builder.Configuration.GetConnectionString("transport");
 var transport = new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), connectionString);
 var routing = endpointConfiguration.UseTransport(transport);
+
 routing.RouteToEndpoint(typeof(PlaceOrder),"Order");
 
 builder.UseNServiceBus(endpointConfiguration);
 
-// Add services to the container.
 builder.Services.AddGrpc();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();

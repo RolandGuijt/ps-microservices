@@ -7,25 +7,27 @@ using GloboTicket.Web.Models.Api;
 
 namespace GloboTicket.Web.Services;
 
-public class EventCatalogService(HttpClient client) : IEventCatalogService
+public class EventCatalogService(IHttpClientFactory clientFactory) : IEventCatalogService
 {
+    private readonly HttpClient _client = clientFactory.CreateClient("event-catalog-client");
+
     public async Task<IEnumerable<Event>> GetAll()
     {
-        return await client.GetFromJsonAsync<List<Event>>("/api/events") ?? [];
+        return await _client.GetFromJsonAsync<List<Event>>("/api/events") ?? [];
     }
 
     public async Task<IEnumerable<Event>> GetByCategoryId(Guid categoryid)
     {
-        return await client.GetFromJsonAsync<List<Event>>($"/api/events/?categoryId={categoryid}") ?? [];
+        return await _client.GetFromJsonAsync<List<Event>>($"/api/events/?categoryId={categoryid}") ?? [];
     }
 
     public async Task<Event> GetEvent(Guid id)
     {
-        return (await client.GetFromJsonAsync<Event>($"/api/events/{id}"))!;
+        return (await _client.GetFromJsonAsync<Event>($"/api/events/{id}"))!;
     }
 
     public async Task<IEnumerable<Category>> GetCategories()
     {
-        return await client.GetFromJsonAsync<List<Category>>("/api/categories") ?? [];
+        return await _client.GetFromJsonAsync<List<Category>>("/api/categories") ?? [];
     }
 }

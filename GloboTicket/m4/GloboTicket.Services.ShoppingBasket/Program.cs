@@ -1,5 +1,6 @@
 using System;
 using GloboTicket.Integration.Messages;
+using GloboTicket.Services.ShoppingBasket;
 using GloboTicket.Services.ShoppingBasket.DbContexts;
 using GloboTicket.Services.ShoppingBasket.Grpc;
 using GloboTicket.Services.ShoppingBasket.Repositories;
@@ -18,14 +19,20 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication()
     .AddJwtBearer(opt =>
     {
-        opt.Authority = "https://localhost:5000";
+        opt.Authority = builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
 
         opt.TokenValidationParameters.ValidateAudience = false;
         opt.TokenValidationParameters.ValidTypes = ["at+jwt"];
 
         opt.MapInboundClaims = false;
+    });
 
-        opt.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(1);
+builder.Services.AddAuthorization()
+    .AddAuthorizationBuilder()
+    .AddPolicy("shopping-basket-scope", p =>
+    {
+        p.RequireAuthenticatedUser();
+        p.RequireClaim("scope", "shopping-basket");
     });
 
 var endpointConfiguration = new EndpointConfiguration("ShoppingCart");
@@ -46,8 +53,13 @@ builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<IBasketLinesRepository, BasketLinesRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<TokenForwardingHandler>();
+
+
 builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c =>
-    c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"));
+    c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"))
+    .AddHttpMessageHandler<TokenForwardingHandler>();
 
 builder.Services.AddDbContext<ShoppingBasketDbContext>(options =>
 {
@@ -70,7 +82,9 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
+app.UseAuthorization();
+
 app.MapGrpcService<ShoppingBasketGrpcService>()
-    .RequireAuthorization();
+    .RequireAuthorization("shopping-basket-scope");
 
 app.Run();

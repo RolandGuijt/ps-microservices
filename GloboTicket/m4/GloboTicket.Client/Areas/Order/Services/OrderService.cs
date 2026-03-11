@@ -7,11 +7,12 @@ using GloboTicket.Web.Areas.Order.Models;
 
 namespace GloboTicket.Web.Services
 {
-    public class OrderService(HttpClient client): IOrderService
+    public class OrderService(IHttpClientFactory clientFactory): IOrderService
     {
+        private readonly HttpClient _client = clientFactory.CreateClient("order-client");
         public async Task<List<Order>> GetOrdersForUser(Guid userId)
         {
-            return await client.GetFromJsonAsync<List<Order>>($"/orders/{userId}");
+            return await _client.GetFromJsonAsync<List<Order>>($"/orders/{userId}");
         }
     }
 }
