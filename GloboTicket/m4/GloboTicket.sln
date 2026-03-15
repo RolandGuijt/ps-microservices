@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.Services.Order"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.Services.Payment", "GloboTicket.Services.Payment\GloboTicket.Services.Payment.csproj", "{6C859B8C-8524-445C-B50D-68825EBA2198}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.Services.IdentityServer", "GloboTicket.Services.IdentityServer\GloboTicket.Services.IdentityServer.csproj", "{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloboTicket.Services.Shipping", "GloboTicket.Services.Shipping\GloboTicket.Services.Shipping.csproj", "{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +65,10 @@ Global
 		{6C859B8C-8524-445C-B50D-68825EBA2198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C859B8C-8524-445C-B50D-68825EBA2198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C859B8C-8524-445C-B50D-68825EBA2198}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -80,7 +80,7 @@ Global
 		{518A3174-2A52-4FE6-ACB5-01CD6D00261F} = {CEF57AD0-BAFD-4E55-B0AA-983B9CCECA99}
 		{ECFFD217-264F-4BA1-A317-58631DF2BE4A} = {F3632F51-056C-43C5-9E59-8D371E99C8BF}
 		{6C859B8C-8524-445C-B50D-68825EBA2198} = {F3632F51-056C-43C5-9E59-8D371E99C8BF}
-		{FF506FC5-AC9A-45CC-99DD-2BFBFDB91CAF} = {F3632F51-056C-43C5-9E59-8D371E99C8BF}
+		{CFDF3E6C-9F12-4E8B-8184-8CF8EC37C6E9} = {F3632F51-056C-43C5-9E59-8D371E99C8BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57E1B7AE-99E6-4F8F-977C-CF0FD36BBE42}

@@ -13,27 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddAuthentication()
-    .AddJwtBearer(opt =>
-    {
-        opt.Authority = builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
-
-        opt.TokenValidationParameters.ValidateAudience = false;
-        opt.TokenValidationParameters.ValidTypes = ["at+jwt"];
-
-        opt.MapInboundClaims = false;
-    });
-
-builder.Services.AddAuthorization()
-    .AddAuthorizationBuilder()
-    .AddPolicy("event-catalog-policy", p =>
-    {
-        p.RequireAuthenticatedUser();
-        p.RequireAssertion(context => context.User.HasClaim(c => c.Type == "sub" || 
-            c is { Type: "client_id", Value: "ShoppingBasket" }));
-        p.RequireClaim("scope", "event-catalog");
-    });
-
+// Add services to the container.
 var connection = builder.Configuration.GetConnectionString("globoticket-postgres-eventcatalog") ?? throw new InvalidOperationException();
 builder.Services.AddDbContext<EventCatalogDbContext>(options =>
     options.UseNpgsql(connection)
@@ -77,7 +57,6 @@ app.UseHttpsRedirection();
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseAuthorization();
-app.MapControllers()
-    .RequireAuthorization("event-catalog-policy");
+app.MapControllers();
 
 app.Run();

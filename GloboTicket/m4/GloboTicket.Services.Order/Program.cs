@@ -10,25 +10,6 @@ builder.Services.AddOpenApi();
 
 builder.AddServiceDefaults();
 
-builder.Services.AddAuthentication()
-    .AddJwtBearer(opt =>
-    {
-        opt.Authority =builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
-
-        opt.TokenValidationParameters.ValidateAudience = false;
-        opt.TokenValidationParameters.ValidTypes = ["at+jwt"];
-
-        opt.MapInboundClaims = false;
-    });
-
-builder.Services.AddAuthorization()
-    .AddAuthorizationBuilder()
-    .AddPolicy("order-scope", p =>
-    {
-        p.RequireAuthenticatedUser();
-        p.RequireClaim("scope", "order");
-    });
-
 var endpointConfiguration = new EndpointConfiguration("Order");
 var connectionString = builder.Configuration.GetConnectionString("transport");
 var transport = new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), connectionString);
@@ -56,13 +37,11 @@ using (var scope = app.Services.CreateScope())
     await db.Database.MigrateAsync();
 }
 
-app.UseAuthorization();
-
 app.MapGet("/orders/{userId}", async (Guid userId, IOrderRepository orderRepository) =>
 {
     var orders = await orderRepository.GetOrdersForUser(userId);
     return orders.MapToDto();
-}).RequireAuthorization("order-scope");
+});
 
 app.MapOpenApi();
 app.UseHttpsRedirection();

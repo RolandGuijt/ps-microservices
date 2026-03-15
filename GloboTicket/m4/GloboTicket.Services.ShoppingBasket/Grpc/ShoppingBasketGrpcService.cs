@@ -173,7 +173,12 @@ public class ShoppingBasketGrpcService(
     public override async Task<SuccessReply> CheckoutBasket(CheckoutBasketRequest request, ServerCallContext context)
     {
         await messageSession.Send(
-            new PlaceOrder(Guid.Parse(request.UserId), Guid.Parse(request.BasketId), request.CardNumber, request.BasketTotal));
+            new PlaceOrder(
+                Guid.Parse(request.UserId), 
+                Guid.Parse(request.BasketId), 
+                request.CardNumber, 
+                request.BasketTotal
+                ));
         
         return new SuccessReply() {Success = true};
     }
