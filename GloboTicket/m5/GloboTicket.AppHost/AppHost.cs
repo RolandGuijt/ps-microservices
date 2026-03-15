@@ -17,6 +17,7 @@ var mySqlDbServer = builder.AddMySql("globoticket-sql-mysql")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var eventCatalogDb = postgresDbServer.AddDatabase("globoticket-postgres-eventcatalog");
+var shippingDB = postgresDbServer.AddDatabase("globoticket-postgres-shipping");
 var shoppingBasketDb = mySqlDbServer.AddDatabase("globoticket-mysql-shoppingbasket");
 var orderDb = mySqlDbServer.AddDatabase("globoticket-mysql-order");
 
@@ -51,6 +52,13 @@ var paymentService = builder
     .AddProject<Projects.GloboTicket_Services_Payment>("globoticket-services-payment")
     .WithReference(transport)
     .WaitFor(transport);
+
+var shippingService = builder
+    .AddProject<Projects.GloboTicket_Services_Shipping>("globoticket-services-shipping")
+    .WithReference(transport)
+    .WaitFor(transport)
+    .WithReference(shippingDB)
+    .WaitFor(shippingDB);
 
 builder.AddProject<Projects.GloboTicket_Web>("globoticket-web")
     .WithReference(eventCatalogService)
