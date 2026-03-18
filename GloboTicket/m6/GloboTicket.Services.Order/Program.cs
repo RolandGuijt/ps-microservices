@@ -13,7 +13,7 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication()
     .AddJwtBearer(opt =>
     {
-        opt.Authority =builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
+        opt.Authority =builder.Configuration["GLOBOTICKET_IDENTITY_HTTPS"];
 
         opt.TokenValidationParameters.ValidateAudience = false;
         opt.TokenValidationParameters.ValidTypes = ["at+jwt"];

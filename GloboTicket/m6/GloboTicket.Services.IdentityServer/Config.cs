@@ -20,7 +20,7 @@ public static class Config
             new ApiScope("order"),
         ];
 
-    public static IEnumerable<Client> Clients =>
+    public static IEnumerable<Client> GetClients(string webClientUrl) =>
         [
             new()
             {
@@ -28,7 +28,7 @@ public static class Config
                 ClientSecrets = { new("3248dsflkjw".Sha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
 
-                RedirectUris = { "https://localhost:5000/signin-oidc" },
+                RedirectUris = { $"{webClientUrl}/signin-oidc" },
                 AllowedScopes = { "openid", "profile", "event-catalog", "shopping-basket", "order" },
 
                 AllowOfflineAccess = true,

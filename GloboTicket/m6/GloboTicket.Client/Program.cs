@@ -24,7 +24,7 @@ builder.Services.AddAuthentication(opt =>
     .AddCookie()
     .AddOpenIdConnect(opt =>
     {
-        opt.Authority = builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
+        opt.Authority = builder.Configuration["GLOBOTICKET_IDENTITY_HTTPS"];
 
         opt.ClientId = "Web";
         opt.ClientSecret = "3248dsflkjw";
@@ -49,12 +49,12 @@ builder.Services.AddAuthentication(opt =>
 builder.Services.AddOpenIdConnectAccessTokenManagement();
 
 builder.Services.AddUserAccessTokenHttpClient("event-catalog-client", configureClient:c =>
-    c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"));
+    c.BaseAddress = new Uri("https+http://globoticket-eventcatalog"));
 builder.Services.AddUserAccessTokenHttpClient("order-client", configureClient:c =>
-    c.BaseAddress = new Uri("https+http://globoticket-services-order"));
+    c.BaseAddress = new Uri("https+http://globoticket-order"));
 
 
-var shoppingBasketUrl = builder.Configuration["GLOBOTICKET_SERVICES_SHOPPINGBASKET_HTTPS"] ?? throw new InvalidOperationException();
+var shoppingBasketUrl = builder.Configuration["GLOBOTICKET_SHOPPINGBASKET_HTTPS"] ?? throw new InvalidOperationException();
 builder.Services.AddGrpcClient<GrpcShoppingBasketService.ShoppingBasketServiceClient>(o =>
 {
     o.Address = new Uri(shoppingBasketUrl);

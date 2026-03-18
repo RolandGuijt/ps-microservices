@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Duende.AccessTokenManagement;
 using GloboTicket.Integration.Messages;
 using GloboTicket.Services.ShoppingBasket;
@@ -20,7 +21,7 @@ builder.AddServiceDefaults();
 builder.Services.AddAuthentication()
     .AddJwtBearer(opt =>
     {
-        opt.Authority = builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"];
+        opt.Authority = builder.Configuration["GLOBOTICKET_IDENTITY_HTTPS"];
 
         opt.TokenValidationParameters.ValidateAudience = false;
         opt.TokenValidationParameters.ValidTypes = ["at+jwt"];
@@ -39,7 +40,7 @@ builder.Services.AddAuthorization()
 builder.Services.AddClientCredentialsTokenManagement()
     .AddClient(ClientCredentialsClientName.Parse("event-catalog-client"), client =>
     {
-        client.TokenEndpoint = new Uri(builder.Configuration["GLOBOTICKET_SERVICES_IDENTITY_HTTPS"] + "/connect/token");
+        client.TokenEndpoint = new Uri(builder.Configuration["GLOBOTICKET_IDENTITY_HTTPS"] + "/connect/token");
 
         client.ClientId = ClientId.Parse("ShoppingBasket");
         client.ClientSecret = ClientSecret.Parse("wexite43");
@@ -76,7 +77,7 @@ builder.Services.AddTransient<TokenForwardingHandler>();
 
 
 builder.Services.AddHttpClient<IEventCatalogService, EventCatalogService>(c =>
-        c.BaseAddress = new Uri("https+http://globoticket-services-eventcatalog"))
+        c.BaseAddress = new Uri("https+http://globoticket-eventcatalog"))
     //.AddHttpMessageHandler<TokenForwardingHandler>();
     .AddClientCredentialsTokenHandler(ClientCredentialsClientName.Parse("event-catalog-client"));
 
@@ -87,11 +88,15 @@ builder.Services.AddDbContext<ShoppingBasketDbContext>(options =>
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+app.Lifetime.ApplicationStarted.Register(() =>
 {
-    var db = scope.ServiceProvider.GetRequiredService<ShoppingBasketDbContext>();
-    await db.Database.MigrateAsync();
-}
+    _ = Task.Run(async () =>
+    {
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<ShoppingBasketDbContext>();
+        await db.Database.MigrateAsync();
+    });
+});
 
 app.MapDefaultEndpoints();
 

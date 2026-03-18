@@ -1,0 +1,47 @@
+api-version: 2024-02-02-preview
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    runtime:
+      dotnet:
+        autoConfigureDataProtection: true
+    ingress:
+      external: false
+      targetPort: 33333
+      transport: http
+      allowInsecure: true
+    registries:
+      - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+    secrets:
+      - name: connectionstring
+        value: amqp://{{ uriEncode (securedParameter "transportUserName" )}}:{{ uriEncode (securedParameter "transportPassword" )}}@transport:5672
+  template:
+    containers:
+      - image: {{ .Image }}
+        name: servicecontrol
+        args:
+          - --setup-and-run
+        env:
+          - name: AZURE_CLIENT_ID
+            value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+          - name: RAVENDB_CONNECTIONSTRING
+            value: http://servicecontrol-ravendb.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+          - name: REMOTEINSTANCES
+            value: '[{"api_uri":"http://servicecontrol-audit:44444"}]'
+          - name: TRANSPORTTYPE
+            value: RabbitMQ.QuorumConventionalRouting
+          - name: CONNECTIONSTRING
+            secretRef: connectionstring
+    scale:
+      minReplicas: 1
+tags:
+  azd-service-name: servicecontrol
+  aspire-resource-name: servicecontrol

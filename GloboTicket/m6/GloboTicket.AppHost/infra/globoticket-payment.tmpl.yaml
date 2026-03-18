@@ -1,0 +1,54 @@
+api-version: 2024-02-02-preview
+location: {{ .Env.AZURE_LOCATION }}
+identity:
+  type: UserAssigned
+  userAssignedIdentities:
+    ? "{{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}"
+    : {}
+properties:
+  environmentId: {{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_ID }}
+  configuration:
+    activeRevisionsMode: single
+    runtime:
+      dotnet:
+        autoConfigureDataProtection: true
+    registries:
+      - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
+        identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
+    secrets:
+      - name: connectionstrings--transport
+        value: amqp://{{ uriEncode (securedParameter "transportUserName" )}}:{{ uriEncode (securedParameter "transportPassword" )}}@transport:5672
+      - name: transport-password
+        value: '{{ securedParameter "transportPassword" }}'
+      - name: transport-username
+        value: '{{ securedParameter "transportUserName" }}'
+  template:
+    containers:
+      - image: {{ .Image }}
+        name: globoticket-payment
+        env:
+          - name: AZURE_CLIENT_ID
+            value: {{ .Env.MANAGED_IDENTITY_CLIENT_ID }}
+          - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES
+            value: "true"
+          - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
+            value: "true"
+          - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
+            value: in_memory
+          - name: TRANSPORT_HOST
+            value: transport
+          - name: TRANSPORT_PORT
+            value: "5672"
+          - name: TRANSPORT_URI
+            value: amqp://{{ uriEncode (securedParameter "transportUserName" )}}:{{ uriEncode (securedParameter "transportPassword" )}}@transport:5672
+          - name: ConnectionStrings__transport
+            secretRef: connectionstrings--transport
+          - name: TRANSPORT_PASSWORD
+            secretRef: transport-password
+          - name: TRANSPORT_USERNAME
+            secretRef: transport-username
+    scale:
+      minReplicas: 1
+tags:
+  azd-service-name: globoticket-payment
+  aspire-resource-name: globoticket-payment
