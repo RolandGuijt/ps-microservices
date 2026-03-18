@@ -13,7 +13,8 @@ var connectionString = builder.Configuration.GetConnectionString("transport");
 var transport = new RabbitMQTransport(RoutingTopology.Conventional(QueueType.Quorum), connectionString);
 var routing = endpointConfiguration.UseTransport(transport);
 
-var persistenceConnection = builder.Configuration.GetConnectionString("globoticket-postgres-shipping");
+var persistenceConnection = 
+    builder.Configuration.GetConnectionString("globoticket-postgres-shipping");
 var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
 persistence.ConnectionBuilder(
     connectionBuilder: () => new NpgsqlConnection(persistenceConnection));

@@ -7,7 +7,8 @@ class ShippingPolicy(ILogger<ShippingPolicy> log) : Saga<ShippingPolicyData>,
     IAmStartedByMessages<OrderPlaced>,
     IAmStartedByMessages<OrderPaid>
 {
-    protected override void ConfigureHowToFindSaga(SagaPropertyMapper<ShippingPolicyData> mapper)
+    protected override void ConfigureHowToFindSaga(
+        SagaPropertyMapper<ShippingPolicyData> mapper)
     {
         mapper.MapSaga(sagaData => sagaData.OrderId)
             .ToMessage<OrderPlaced>(message => message.OrderId)
