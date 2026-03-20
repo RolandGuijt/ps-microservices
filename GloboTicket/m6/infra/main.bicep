@@ -50,6 +50,23 @@ module resources 'resources.bicep' = {
   }
 }
 
+module identity_storage 'identity-storage/identity-storage.module.bicep' = {
+  name: 'identity-storage'
+  scope: rg
+  params: {
+    location: location
+  }
+}
+module identity_storage_roles 'identity-storage-roles/identity-storage-roles.module.bicep' = {
+  name: 'identity-storage-roles'
+  scope: rg
+  params: {
+    identity_storage_outputs_name: identity_storage.outputs.name
+    location: location
+    principalId: resources.outputs.MANAGED_IDENTITY_PRINCIPAL_ID
+    principalType: 'ServicePrincipal'
+  }
+}
 
 output MANAGED_IDENTITY_CLIENT_ID string = resources.outputs.MANAGED_IDENTITY_CLIENT_ID
 output MANAGED_IDENTITY_NAME string = resources.outputs.MANAGED_IDENTITY_NAME
@@ -60,3 +77,4 @@ output AZURE_CONTAINER_REGISTRY_NAME string = resources.outputs.AZURE_CONTAINER_
 output AZURE_CONTAINER_APPS_ENVIRONMENT_NAME string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_NAME
 output AZURE_CONTAINER_APPS_ENVIRONMENT_ID string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_ID
 output AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN string = resources.outputs.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN
+output IDENTITY_STORAGE_BLOBENDPOINT string = identity_storage.outputs.blobEndpoint

@@ -8,6 +8,8 @@ using GloboTicket.Services.ShoppingBasket.Grpc;
 using GloboTicket.Services.ShoppingBasket.Repositories;
 using GloboTicket.Services.ShoppingBasket.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,14 @@ using Microsoft.Extensions.Hosting;
 using NServiceBus;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ConfigureEndpointDefaults(listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http2;
+    });
+});
 
 builder.AddServiceDefaults();
 
@@ -51,11 +61,6 @@ builder.Services.AddClientCredentialsTokenManagement()
 var endpointConfiguration = new EndpointConfiguration("ShoppingCart");
 endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
-endpointConfiguration.SendHeartbeatTo("Particular.ServiceControl");
-endpointConfiguration.AuditProcessedMessagesTo("audit");
-
-var metrics = endpointConfiguration.EnableMetrics();
-metrics.SendMetricDataToServiceControl("Particular.Monitoring", TimeSpan.FromSeconds(1));
 endpointConfiguration.EnableInstallers();
 
 var connectionString = builder.Configuration.GetConnectionString("transport");

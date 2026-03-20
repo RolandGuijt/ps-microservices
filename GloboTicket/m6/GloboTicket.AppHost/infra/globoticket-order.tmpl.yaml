@@ -41,9 +41,9 @@ properties:
           - name: ASPNETCORE_FORWARDEDHEADERS_ENABLED
             value: "true"
           - name: GLOBOTICKET_IDENTITY_HTTP
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTPS
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_MYSQL_ORDER_DATABASENAME
             value: globoticket-mysql-order
           - name: GLOBOTICKET_MYSQL_ORDER_HOST
@@ -75,9 +75,9 @@ properties:
           - name: TRANSPORT_URI
             value: amqp://{{ uriEncode (securedParameter "transportUserName" )}}:{{ uriEncode (securedParameter "transportPassword" )}}@transport:5672
           - name: services__globoticket-identity__http__0
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__https__0
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-shoppingbasket__http__0
             value: http://globoticket-shoppingbasket.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-shoppingbasket__https__0

@@ -16,7 +16,7 @@ properties:
       external: true
       targetPort: {{ targetPortOrDefault 8080 }}
       transport: http
-      allowInsecure: true
+      allowInsecure: false
     registries:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
         identity: {{ .Env.AZURE_CONTAINER_REGISTRY_MANAGED_IDENTITY_ID }}
@@ -34,9 +34,9 @@ properties:
           - name: GLOBOTICKET_EVENTCATALOG_HTTPS
             value: https://globoticket-eventcatalog.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTP
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTPS
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_ORDER_HTTP
             value: http://globoticket-order.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_ORDER_HTTPS
@@ -58,9 +58,9 @@ properties:
           - name: services__globoticket-eventcatalog__https__0
             value: https://globoticket-eventcatalog.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__http__0
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__https__0
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-order__http__0
             value: http://globoticket-order.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-order__https__0

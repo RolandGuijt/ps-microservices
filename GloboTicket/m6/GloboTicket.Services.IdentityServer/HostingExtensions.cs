@@ -11,25 +11,27 @@ internal static class HostingExtensions
         builder.Services.AddRazorPages();
         
         builder.AddAzureBlobServiceClient("keys-storage");
-        builder.AddAzureKeyVaultClient("identity-keyvault");
+        //builder.AddAzureKeyVaultClient("identity-keyvault");
 
-        var keyVaultUri = builder.Configuration.GetConnectionString("identity-keyvault");
+        //var keyVaultUri = builder.Configuration.GetConnectionString("identity-keyvault");
 
         var dpBuilder = builder.Services.AddDataProtection()
+            .SetApplicationName("GloboTicket.IdentityServer")
             .PersistKeysToAzureBlobStorage(sp =>
             {
                 var client = sp.GetRequiredService<Azure.Storage.Blobs.BlobServiceClient>();
-                return client.GetBlobContainerClient("identity-keys")
-                    .GetBlobClient("dataprotection-keys.xml");
+                var container = client.GetBlobContainerClient("identity-keys");
+                container.CreateIfNotExists();
+                return container.GetBlobClient("dataprotection-keys.xml");
             });
 
-        if (!string.IsNullOrEmpty(keyVaultUri))
-        {
-            // Encrypt data protection keys at rest with a Key Vault key
-            dpBuilder.ProtectKeysWithAzureKeyVault(
-                new Uri($"{keyVaultUri.TrimEnd('/')}/keys/dataprotection"),
-                new DefaultAzureCredential());
-        }
+        // if (!string.IsNullOrEmpty(keyVaultUri))
+        // {
+        //     // Encrypt data protection keys at rest with a Key Vault key
+        //     dpBuilder.ProtectKeysWithAzureKeyVault(
+        //         new Uri($"{keyVaultUri.TrimEnd('/')}/keys/dataprotection"),
+        //         new DefaultAzureCredential());
+        // }
         
         builder.Services.AddTransient<ISigningKeyStore, BlobSigningKeyStore>();
 
@@ -41,8 +43,7 @@ internal static class HostingExtensions
         // in-memory, code config
         isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
         
-        var webClientUrl = builder.Configuration["GLOBOTICKET_WEB_HTTPS"]
-                           ?? builder.Configuration["GLOBOTICKET_WEB_HTTP"]
+        var webClientUrl = builder.Configuration["GLOBOTICKET_WEB_EXTERNAL_HTTPS"]
                            ?? "https://localhost:5000";
         isBuilder.AddInMemoryClients(Config.GetClients(webClientUrl));
         isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);

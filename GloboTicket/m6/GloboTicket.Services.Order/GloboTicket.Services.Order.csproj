@@ -15,9 +15,6 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="NServiceBus.Extensions.Hosting" Version="4.*" />
-        <PackageReference Include="NServiceBus.Heartbeat" Version="6.0.0" />
-        <PackageReference Include="NServiceBus.Metrics" Version="6.0.0" />
-        <PackageReference Include="NServiceBus.Metrics.ServiceControl" Version="6.0.0" />
         <PackageReference Include="NServiceBus.RabbitMQ" Version="11.*" />
     </ItemGroup>
 

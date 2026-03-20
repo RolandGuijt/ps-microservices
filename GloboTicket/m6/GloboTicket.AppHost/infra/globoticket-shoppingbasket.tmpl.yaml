@@ -15,7 +15,7 @@ properties:
     ingress:
       external: false
       targetPort: {{ targetPortOrDefault 8080 }}
-      transport: http
+      transport: http2
       allowInsecure: true
     registries:
       - server: {{ .Env.AZURE_CONTAINER_REGISTRY_ENDPOINT }}
@@ -45,9 +45,9 @@ properties:
           - name: GLOBOTICKET_EVENTCATALOG_HTTPS
             value: https://globoticket-eventcatalog.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTP
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTPS
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_MYSQL_SHOPPINGBASKET_DATABASENAME
             value: globoticket-mysql-shoppingbasket
           - name: GLOBOTICKET_MYSQL_SHOPPINGBASKET_HOST
@@ -79,9 +79,9 @@ properties:
           - name: services__globoticket-eventcatalog__https__0
             value: https://globoticket-eventcatalog.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__http__0
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__https__0
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: ConnectionStrings__globoticket-mysql-shoppingbasket
             secretRef: connectionstrings--globoticket-mysql-shoppingbasket
           - name: ConnectionStrings__transport

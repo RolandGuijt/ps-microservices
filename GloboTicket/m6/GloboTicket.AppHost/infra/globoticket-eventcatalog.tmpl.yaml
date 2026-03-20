@@ -35,9 +35,9 @@ properties:
           - name: ASPNETCORE_FORWARDEDHEADERS_ENABLED
             value: "true"
           - name: GLOBOTICKET_IDENTITY_HTTP
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_IDENTITY_HTTPS
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: GLOBOTICKET_POSTGRES_EVENTCATALOG_DATABASENAME
             value: globoticket-postgres-eventcatalog
           - name: GLOBOTICKET_POSTGRES_EVENTCATALOG_HOST
@@ -59,9 +59,9 @@ properties:
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
           - name: services__globoticket-identity__http__0
-            value: http://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: http://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: services__globoticket-identity__https__0
-            value: https://globoticket-identity.internal.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
+            value: https://globoticket-identity.{{ .Env.AZURE_CONTAINER_APPS_ENVIRONMENT_DEFAULT_DOMAIN }}
           - name: ConnectionStrings__globoticket-postgres-eventcatalog
             secretRef: connectionstrings--globoticket-postgres-eventcatalog
           - name: GLOBOTICKET_POSTGRES_EVENTCATALOG_PASSWORD
