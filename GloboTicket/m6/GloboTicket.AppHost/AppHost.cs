@@ -68,7 +68,9 @@ web.WithReference(eventCatalogService)
     .WaitFor(shoppingBasketService)
     .WithReference(orderService)
     .WithReference(identityService)
-    .WaitFor(identityService);
+    .WaitFor(identityService)
+    .WithReference(keysBlob)
+    .WaitFor(keysBlob);
 
 var paymentService = builder
     .AddProject<Projects.GloboTicket_Services_Payment>("globoticket-payment")

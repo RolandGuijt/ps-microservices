@@ -13,17 +13,17 @@ public class EventCatalogService(IHttpClientFactory clientFactory) : IEventCatal
 
     public async Task<IEnumerable<Event>> GetAll()
     {
-        return await _client.GetFromJsonAsync<List<Event>>("/api/events") ?? [];
+        return await _client.GetFromJsonAsync<List<Event>>("/api/v1.0/events") ?? [];
     }
 
     public async Task<IEnumerable<Event>> GetByCategoryId(Guid categoryid)
     {
-        return await _client.GetFromJsonAsync<List<Event>>($"/api/events/?categoryId={categoryid}") ?? [];
+        return await _client.GetFromJsonAsync<List<Event>>($"/api/v1.0/events/?categoryId={categoryid}") ?? [];
     }
 
     public async Task<Event> GetEvent(Guid id)
     {
-        return (await _client.GetFromJsonAsync<Event>($"/api/events/{id}"))!;
+        return (await _client.GetFromJsonAsync<Event>($"/api/v1.0/events/{id}"))!;
     }
 
     public async Task<IEnumerable<Category>> GetCategories()

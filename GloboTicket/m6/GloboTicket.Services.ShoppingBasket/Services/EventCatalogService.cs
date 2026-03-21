@@ -10,6 +10,6 @@ public class EventCatalogService(HttpClient client) : IEventCatalogService
 {
     public async Task<Event> GetEvent(Guid id)
     {
-        return (await client.GetFromJsonAsync<Event>($"/api/events/{id}"))!;
+        return (await client.GetFromJsonAsync<Event>($"/api/v2.0/events/{id}"))!;
     }
 }

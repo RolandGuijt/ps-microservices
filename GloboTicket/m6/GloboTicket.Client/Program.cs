@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using GrpcShoppingBasketService = GloboTicket.Services.ShoppingBasket.Grpc.ShoppingBasketService;
@@ -15,6 +16,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
 builder.Services.AddControllersWithViews();
+
+builder.AddAzureBlobServiceClient("keys-storage");
+
+builder.Services.AddDataProtection()
+    .SetApplicationName("GloboTicket.Web")
+    .PersistKeysToAzureBlobStorage(sp =>
+    {
+        var client = sp.GetRequiredService<Azure.Storage.Blobs.BlobServiceClient>();
+        var container = client.GetBlobContainerClient("web-keys");
+        container.CreateIfNotExists();
+        return container.GetBlobClient("dataprotection-keys.xml");
+    });
+    //.ProtectKeysWithDpapi();
 
 builder.Services.AddAuthentication(opt =>
     {

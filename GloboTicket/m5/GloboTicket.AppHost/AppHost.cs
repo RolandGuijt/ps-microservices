@@ -84,18 +84,6 @@ var audit = builder.AddContainer("ServiceControl-Audit", "particular/servicecont
     .WaitFor(transport)
     .WaitFor(ravenDB);
 
-var serviceControl = builder.AddContainer("ServiceControl", "particular/servicecontrol")
-    .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
-    .WithEnvironment("CONNECTIONSTRING", transport)
-    .WithEnvironment("RAVENDB_CONNECTIONSTRING", ravenDB.GetEndpoint("http"))
-    .WithEnvironment("REMOTEINSTANCES", $"[{{\"api_uri\":\"{audit.GetEndpoint("http")}\"}}]")
-    .WithArgs("--setup-and-run")
-    .WithHttpEndpoint(33333, 33333)
-    .WithUrlForEndpoint("http", url => url.DisplayLocation = UrlDisplayLocation.DetailsOnly)
-    .WithHttpHealthCheck("api/configuration")
-    .WaitFor(transport)
-    .WaitFor(ravenDB);
-
 var monitoring = builder.AddContainer("ServiceControl-Monitoring", "particular/servicecontrol-monitoring")
     .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
     .WithEnvironment("CONNECTIONSTRING", transport)
@@ -105,12 +93,21 @@ var monitoring = builder.AddContainer("ServiceControl-Monitoring", "particular/s
     .WithHttpHealthCheck("connection")
     .WaitFor(transport);
 
-var servicePulse = builder.AddContainer("ServicePulse", "particular/servicepulse")
-    .WithEnvironment("ENABLE_REVERSE_PROXY", "false")
-    .WithHttpEndpoint(9090, 9090)
+var serviceControl = builder.AddContainer("ServiceControl", "particular/servicecontrol:latest")
+    .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
+    .WithEnvironment("CONNECTIONSTRING", transport)
+    .WithEnvironment("RAVENDB_CONNECTIONSTRING", ravenDB.GetEndpoint("http"))
+    .WithEnvironment("REMOTEINSTANCES", $"[{{\"api_uri\":\"{audit.GetEndpoint("http")}\"}}]")
+    .WithEnvironment("ENABLEINTEGRATEDSERVICEPULSE", "true")
+    .WithArgs("--setup-and-run")
+    .WithHttpEndpoint(33333, 33333)
     .WithUrlForEndpoint("http", url => url.DisplayText = "ServicePulse")
-    .WaitFor(serviceControl)
-    .WaitFor(audit)
-    .WaitFor(monitoring);
+    .WithEnvironment("ENABLE_REVERSE_PROXY", "false")
+    .WithHttpHealthCheck("api/configuration")
+    .WaitFor(monitoring)
+    .WaitFor(transport)
+    .WaitFor(ravenDB);
+
+
 
 builder.Build().Run();

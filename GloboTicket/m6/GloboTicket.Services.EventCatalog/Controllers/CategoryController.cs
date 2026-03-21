@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using GloboTicket.Services.EventCatalog.Extensions;
 using GloboTicket.Services.EventCatalog.Models;
 using GloboTicket.Services.EventCatalog.Repositories;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GloboTicket.Services.EventCatalog.Controllers;
 
 [Route("api/categories")]
+[ApiController]
 public class CategoryController(ICategoryRepository categoryRepository): ControllerBase
 {
     [HttpGet]

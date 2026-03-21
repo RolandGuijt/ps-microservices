@@ -1,4 +1,5 @@
 using System;
+using Asp.Versioning;
 using GloboTicket.Services.EventCatalog;
 using GloboTicket.Services.EventCatalog.DbContexts;
 using GloboTicket.Services.EventCatalog.Repositories;
@@ -48,6 +49,12 @@ builder.Services.AddDbContext<EventCatalogDbContext>(options =>
             await context.SaveChangesAsync(cancellationToken);
         }));
 
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+}).AddMvc();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
