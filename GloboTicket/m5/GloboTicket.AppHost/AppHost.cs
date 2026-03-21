@@ -105,6 +105,7 @@ var serviceControl = builder.AddContainer("ServiceControl", "particular/servicec
     .WithEnvironment("ENABLE_REVERSE_PROXY", "false")
     .WithHttpHealthCheck("api/configuration")
     .WaitFor(monitoring)
+    .WaitFor(audit)
     .WaitFor(transport)
     .WaitFor(ravenDB);
 
