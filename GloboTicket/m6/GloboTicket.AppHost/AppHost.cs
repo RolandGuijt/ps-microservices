@@ -1,3 +1,6 @@
+using System.Net.Sockets;
+using Aspire.Hosting.Azure;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var transportUserName = builder.AddParameter("transportUserName", "guest", secret: true);

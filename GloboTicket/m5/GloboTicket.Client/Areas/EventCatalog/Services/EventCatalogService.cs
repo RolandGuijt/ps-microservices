@@ -7,9 +7,11 @@ using GloboTicket.Web.Models.Api;
 
 namespace GloboTicket.Web.Services;
 
-public class EventCatalogService(IHttpClientFactory clientFactory) : IEventCatalogService
+public class EventCatalogService(IHttpClientFactory clientFactory) 
+    : IEventCatalogService
 {
-    private readonly HttpClient _client = clientFactory.CreateClient("event-catalog-client");
+    private readonly HttpClient _client = 
+        clientFactory.CreateClient("event-catalog-client");
 
     public async Task<IEnumerable<Event>> GetAll()
     {

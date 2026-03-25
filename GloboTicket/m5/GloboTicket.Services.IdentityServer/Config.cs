@@ -29,7 +29,8 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
 
                 RedirectUris = { "https://localhost:5000/signin-oidc" },
-                AllowedScopes = { "openid", "profile", "event-catalog", "shopping-basket", "order" },
+                AllowedScopes = { "openid", "profile", 
+                    "event-catalog", "shopping-basket", "order" },
 
                 AllowOfflineAccess = true,
             },

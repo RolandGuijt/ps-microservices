@@ -69,11 +69,13 @@ builder.AddProject<Projects.GloboTicket_Web>("globoticket-web")
     .WithReference(identityService)
     .WaitFor(identityService);
 
-var ravenDB = builder.AddContainer("ServiceControl-RavenDB", "particular/servicecontrol-ravendb")
+var ravenDB = builder.AddContainer("ServiceControl-RavenDB", 
+        "particular/servicecontrol-ravendb")
     .WithHttpEndpoint(8080, 8080)
     .WithUrlForEndpoint("http", url => url.DisplayText = "Management Studio");
 
-var audit = builder.AddContainer("ServiceControl-Audit", "particular/servicecontrol-audit")
+var audit = builder.AddContainer("ServiceControl-Audit", 
+        "particular/servicecontrol-audit")
     .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
     .WithEnvironment("CONNECTIONSTRING", transport)
     .WithEnvironment("RAVENDB_CONNECTIONSTRING", ravenDB.GetEndpoint("http"))
@@ -84,7 +86,8 @@ var audit = builder.AddContainer("ServiceControl-Audit", "particular/servicecont
     .WaitFor(transport)
     .WaitFor(ravenDB);
 
-var monitoring = builder.AddContainer("ServiceControl-Monitoring", "particular/servicecontrol-monitoring")
+var monitoring = builder.AddContainer("ServiceControl-Monitoring", 
+        "particular/servicecontrol-monitoring")
     .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
     .WithEnvironment("CONNECTIONSTRING", transport)
     .WithArgs("--setup-and-run")
@@ -93,7 +96,8 @@ var monitoring = builder.AddContainer("ServiceControl-Monitoring", "particular/s
     .WithHttpHealthCheck("connection")
     .WaitFor(transport);
 
-var serviceControl = builder.AddContainer("ServiceControl", "particular/servicecontrol:latest")
+var serviceControl = builder.AddContainer("ServiceControl", 
+        "particular/servicecontrol")
     .WithEnvironment("TRANSPORTTYPE", "RabbitMQ.QuorumConventionalRouting")
     .WithEnvironment("CONNECTIONSTRING", transport)
     .WithEnvironment("RAVENDB_CONNECTIONSTRING", ravenDB.GetEndpoint("http"))

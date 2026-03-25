@@ -33,7 +33,8 @@ endpointConfiguration.AuditProcessedMessagesTo("audit");
 endpointConfiguration.AuditSagaStateChanges(serviceControlQueue: "audit");
 
 var metrics = endpointConfiguration.EnableMetrics();
-metrics.SendMetricDataToServiceControl("Particular.Monitoring", TimeSpan.FromSeconds(1));
+metrics.SendMetricDataToServiceControl("Particular.Monitoring", 
+    TimeSpan.FromSeconds(1));
 
 endpointConfiguration.EnableInstallers();
 

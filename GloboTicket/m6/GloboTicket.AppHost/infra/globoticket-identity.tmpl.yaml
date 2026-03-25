@@ -42,10 +42,6 @@ properties:
             value: '{{ targetPortOrDefault 0 }}'
           - name: KEYS_STORAGE_URI
             value: '{{ .Env.IDENTITY_STORAGE_BLOBENDPOINT }}'
-          - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EVENT_LOG_ATTRIBUTES
-            value: "true"
-          - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_EMIT_EXCEPTION_LOG_ATTRIBUTES
-            value: "true"
           - name: OTEL_DOTNET_EXPERIMENTAL_OTLP_RETRY
             value: in_memory
           - name: services__globoticket-web__http__0

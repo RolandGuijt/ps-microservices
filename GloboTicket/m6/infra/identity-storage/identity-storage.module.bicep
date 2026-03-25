@@ -11,6 +11,7 @@ resource identity_storage 'Microsoft.Storage/storageAccounts@2024-01-01' = {
   properties: {
     accessTier: 'Hot'
     allowSharedKeyAccess: false
+    isHnsEnabled: false
     minimumTlsVersion: 'TLS1_2'
     networkAcls: {
       defaultAction: 'Allow'
@@ -23,8 +24,12 @@ resource identity_storage 'Microsoft.Storage/storageAccounts@2024-01-01' = {
 
 output blobEndpoint string = identity_storage.properties.primaryEndpoints.blob
 
+output dataLakeEndpoint string = identity_storage.properties.primaryEndpoints.dfs
+
 output queueEndpoint string = identity_storage.properties.primaryEndpoints.queue
 
 output tableEndpoint string = identity_storage.properties.primaryEndpoints.table
 
 output name string = identity_storage.name
+
+output id string = identity_storage.id

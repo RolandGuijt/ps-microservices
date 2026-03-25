@@ -29,9 +29,10 @@ builder.Services.AddAuthorization()
     .AddPolicy("event-catalog-policy", p =>
     {
         p.RequireAuthenticatedUser();
-        p.RequireAssertion(context => context.User.HasClaim(c => c.Type == "sub" || 
-            c is { Type: "client_id", Value: "ShoppingBasket" }));
         p.RequireClaim("scope", "event-catalog");
+        p.RequireAssertion(context => context.User.HasClaim(c => 
+            c.Type == "sub" || 
+            c is { Type: "client_id", Value: "ShoppingBasket" }));
     });
 
 var connection = builder.Configuration.GetConnectionString("globoticket-postgres-eventcatalog") ?? throw new InvalidOperationException();

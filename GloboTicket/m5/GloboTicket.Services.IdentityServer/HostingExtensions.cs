@@ -13,7 +13,8 @@ internal static class HostingExtensions
         // in-memory, code config
         isBuilder.AddInMemoryApiScopes(Config.ApiScopes);
         isBuilder.AddInMemoryClients(Config.Clients);
-        isBuilder.AddInMemoryIdentityResources(Config.IdentityResources);
+        isBuilder.AddInMemoryIdentityResources(
+            Config.IdentityResources);
 
         return builder.Build();
     }
